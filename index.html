@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banco Aurora Demo — DEMONSTRAÇÃO FICTÍCIA</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --a1:#0a1628;--a2:#0f2140;--a3:#162d56;--a4:#1e3a6e;
+  --accent:#00c8a0;--accent2:#00e6b8;--gold:#f0c040;
+  --warn:#ff2d55;--warn-bg:rgba(255,45,85,.12);
+  --text:#e8ecf4;--muted:#8a96b0;
+  --card:#132347;--card2:#182b52;--border:rgba(255,255,255,.08);
+  --rad:16px;--rad-s:10px;
+  --shd:0 8px 32px rgba(0,0,0,.35);
+  --tr:.3s cubic-bezier(.4,0,.2,1);
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--a1);color:var(--text);
+  min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+.sim-bar{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  background:var(--warn);color:#fff;text-align:center;
+  font-weight:800;font-size:clamp(.7rem,2.5vw,.95rem);
+  letter-spacing:.08em;padding:.55em .5em;
+  line-height:1.3;text-transform:uppercase;
+  box-shadow:0 2px 12px rgba(255,45,85,.5);
+  animation:barPulse 3s ease-in-out infinite;
+}
+@keyframes barPulse{0%,100%{opacity:1}50%{opacity:.85}}
+body.has-bar{padding-top:clamp(2.2rem,5vw,2.8rem)}
+
+.watermark{position:relative;overflow:hidden}
+.watermark::before{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:repeating-linear-gradient(-55deg,transparent,transparent 60px,rgba(255,45,85,.045) 60px,rgba(255,45,85,.045) 110px);
+}
+.watermark::after{
+  content:'SIMULAÇÃO — SEM VALOR FINANCEIRO';
+  position:absolute;inset:0;z-index:3;pointer-events:none;
+  font-weight:900;font-size:clamp(1rem,4vw,1.6rem);
+  color:rgba(255,45,85,.08);letter-spacing:.15em;
+  text-transform:uppercase;word-break:break-word;line-height:2;
+  padding:20px;overflow:hidden;
+}
+
+.app{max-width:480px;margin:0 auto;padding:0 0 90px 0;min-height:100vh}
+
+.hdr{padding:18px 20px 12px;display:flex;align-items:center;justify-content:space-between}
+.logo-g{display:flex;align-items:center;gap:10px}
+.logo-i{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1.1rem;color:var(--a1);
+}
+.logo-t{font-weight:700;font-size:1.1rem;letter-spacing:.02em}
+.logo-t span{color:var(--accent)}
+.hdr-sub{font-size:.65rem;color:var(--muted);letter-spacing:.06em;margin-top:1px}
+
+.pg{display:none;padding:0 20px 24px;animation:fadeUp .4s ease}
+.pg.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.cd{
+  background:var(--card);border-radius:var(--rad);padding:22px;
+  margin-bottom:16px;border:1px solid var(--border);
+  box-shadow:var(--shd);
+  transition:transform var(--tr),box-shadow var(--tr);
+}
+.cd:active{transform:scale(.985)}
+.cd-l{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+.cd-v{font-size:1.55rem;font-weight:700;letter-spacing:-.02em}
+.cd-v.ac{color:var(--accent)}.cd-v.wr{color:var(--warn)}.cd-v.gl{color:var(--gold)}
+.cd-r{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.cd-r+.cd-r{border-top:1px solid var(--border)}
+
+.cc{
+  width:100%;aspect-ratio:1.6/1;border-radius:18px;
+  padding:28px 24px;
+  background:linear-gradient(135deg,#0e2a5c 0%,#1a4a8a 40%,#0c3670 100%);
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:0 12px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1);
+  margin-bottom:16px;
+}
+.cc::before{content:'';position:absolute;top:-40%;right:-30%;width:80%;height:100%;background:radial-gradient(ellipse,rgba(0,200,160,.12),transparent 65%);pointer-events:none}
+.cc-chip{width:42px;height:30px;border-radius:6px;background:linear-gradient(135deg,#d4a85c,#c99a3c);display:flex;align-items:center;justify-content:center}
+.cc-chip::after{content:'';width:24px;height:18px;border:1.5px solid rgba(0,0,0,.2);border-radius:3px}
+.cc-num{font-family:'Courier New',monospace;font-size:clamp(.85rem,2.8vw,1.05rem);letter-spacing:.14em;color:rgba(255,255,255,.85);margin-top:12px}
+.cc-bt{display:flex;justify-content:space-between;align-items:flex-end}
+.cc-nm{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.7)}
+.cc-br{font-weight:800;font-size:1.3rem;color:var(--accent);letter-spacing:.05em}
+.cc-fl{position:absolute;top:14px;right:16px;font-size:.55rem;font-weight:700;color:var(--warn);letter-spacing:.08em;text-transform:uppercase;background:rgba(255,45,85,.12);padding:3px 8px;border-radius:4px}
+
+.sw{
+  background:var(--warn-bg);border:1px solid rgba(255,45,85,.2);
+  border-radius:var(--rad-s);padding:12px 14px;margin-bottom:16px;
+  font-size:.78rem;color:#ff6b8a;font-weight:600;text-align:center;
+  letter-spacing:.03em;line-height:1.4;
+}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 24px;border:none;border-radius:var(--rad-s);
+  font-weight:700;font-size:.9rem;cursor:pointer;
+  transition:all var(--tr);letter-spacing:.02em;
+  -webkit-tap-highlight-color:transparent;user-select:none;width:100%;
+}
+.btn:active{transform:scale(.96)}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--a1)}
+.btn-p:hover{box-shadow:0 4px 20px rgba(0,200,160,.35)}
+.btn-d{background:linear-gradient(135deg,#ff2d55,#ff6b8a);color:#fff}
+.btn-o{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+.btn-o:hover{border-color:var(--accent);color:var(--accent)}
+.btn-g{background:linear-gradient(135deg,var(--gold),#ffd966);color:var(--a1)}
+
+.fg{margin-bottom:16px}
+.fl{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em}
+.fi{
+  width:100%;padding:13px 16px;
+  background:var(--card2);border:1.5px solid var(--border);
+  border-radius:var(--rad-s);color:var(--text);font-size:.95rem;
+  transition:border-color var(--tr);outline:none;
+}
+.fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,200,160,.15)}
+.fi::placeholder{color:var(--muted);opacity:.6}
+
+.tx{display:flex;align-items:center;gap:12px;padding:12px 0}
+.tx+.tx{border-top:1px solid var(--border)}
+.tx-i{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.tx-i.gn{background:rgba(0,200,160,.12);color:var(--accent)}
+.tx-i.rd{background:rgba(255,45,85,.1);color:var(--warn)}
+.tx-i.gl{background:rgba(240,192,64,.1);color:var(--gold)}
+.tx-n{flex:1;min-width:0}
+.tx-t{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-d{font-size:.7rem;color:var(--muted);margin-top:2px}
+.tx-a{font-weight:700;font-size:.9rem;white-space:nowrap}
+.tx-a.pos{color:var(--accent)}.tx-a.neg{color:var(--warn)}
+
+.bnav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(10,22,40,.96);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;
+  padding:6px 0 max(env(safe-area-inset-bottom,8px),8px);
+  z-index:100;max-width:480px;margin:0 auto;
+}
+.ni{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:4px 8px;cursor:pointer;color:var(--muted);
+  transition:color var(--tr);
+  -webkit-tap-highlight-color:transparent;
+  font-size:.65rem;font-weight:600;letter-spacing:.04em;
+}
+.ni.on{color:var(--accent)}
+.ni-i{font-size:1.2rem;line-height:1}
+
+.mo{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(6px);z-index:200;display:none;
+  align-items:flex-end;justify-content:center;
+}
+.mo.show{display:flex}
+.md{
+  width:100%;max-width:480px;
+  background:var(--a2);border-radius:20px 20px 0 0;
+  padding:28px 24px max(env(safe-area-inset-bottom,20px),32px);
+  animation:slideUp .35s ease;position:relative;
+  max-height:85vh;overflow-y:auto;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.md-h{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 20px}
+.md-t{font-size:1.1rem;font-weight:700;margin-bottom:16px}
+
+.pxa{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+.pxc{
+  width:100px;height:100px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  animation:pixP 1s ease-in-out;
+  box-shadow:0 0 40px rgba(0,200,160,.3);
+}
+@keyframes pixP{0%{transform:scale(0);opacity:0}50%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.pxc-s{font-size:3rem;color:var(--a1)}
+
+.rcp{background:#fff;color:#1a1a2e;border-radius:var(--rad);overflow:hidden}
+.rcp-h{background:linear-gradient(135deg,var(--accent),var(--accent2));padding:20px;text-align:center}
+.rcp-h h2{font-size:1rem;font-weight:800;color:var(--a1);letter-spacing:.08em}
+.rcp-st{
+  background:rgba(255,45,85,.08);border:3px solid var(--warn);
+  border-radius:12px;padding:14px 16px;margin:16px;
+  text-align:center;font-weight:900;font-size:.85rem;
+  color:var(--warn);letter-spacing:.06em;line-height:1.4;
+}
+.rcp-b{padding:0 16px 16px}
+.rcp-r{display:flex;justify-content:space-between;padding:10px 0;font-size:.82rem}
+.rcp-r+.rcp-r{border-top:1px solid #eee}
+.rcp-l{color:#777;font-weight:500}
+.rcp-v{font-weight:700;color:#1a1a2e}
+.rcp-f{padding:16px;text-align:center;font-size:.72rem;color:#999;border-top:2px dashed #ddd}
+
+.pi{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:.82rem}
+.pi+.pi{border-top:1px solid var(--border)}
+.pi-n{color:var(--text)}.pi-v{font-weight:700;color:var(--warn)}
+
+@media print{
+  .sim-bar{position:static!important;display:block!important;width:100%!important;background:#ff2d55!important;color:#fff!important;font-size:14pt!important;padding:10px!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bnav,.mo,.btn{display:none!important}
+  .watermark::before,.watermark::after{-webkit-print-color-adjust:exact;print-color-adjust:exact!important;color:rgba(255,45,85,.12)!important}
+  .rcp-st{-webkit-print-color-adjust:exact;print-color-adjust:exact!important;background:rgba(255,45,85,.1)!important;border-color:#ff2d55!important;color:#ff2d55!important}
+  .sw,.cc-fl{display:block!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff!important;color:#1a1a2e!important}
+  .app{max-width:100%!important}
+  @page{margin:10mm}
+}
+
+@media(min-width:481px){.app{border-left:1px solid var(--border);border-right:1px solid var(--border)}}
+@media(min-width:768px){.app{max-width:540px}.cd-v{font-size:1.8rem}}
+
+.mb8{margin-bottom:8px}.mb16{margin-bottom:16px}.mt16{margin-top:16px}
+.tc{text-align:center}.ts{font-size:.75rem}.tm{color:var(--muted)}
+.fb{display:flex;justify-content:space-between;align-items:center}
+</style>
+</head>
+<body class="has-bar">
+
+<div class="sim-bar" id="simBar">DEMONSTRAÇÃO — BANCO FICTÍCIO — SEM VALOR FINANCEIRO</div>
+
+<div class="app">
+  <header class="hdr">
+    <div class="logo-g">
+      <div class="logo-i">A</div>
+      <div>
+        <div class="logo-t">Banco <span>Aurora</span></div>
+        <div class="hdr-sub">DEMONSTRAÇÃO FICTÍCIA</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <div class="pg on" id="pgHome">
+    <div class="sw">⚠ DADOS FICTÍCIOS — ESTA CONTA NÃO EXISTE — SEM VALOR FINANCEIRO</div>
+    <div class="cd">
+      <div class="cd-l">Saldo Disponível (Fictício)</div>
+      <div class="cd-v ac" id="dBal">R$ 12.450,00</div>
+    </div>
+    <div class="cd">
+      <div class="fb">
+        <div>
+          <div class="cd-l">Fatura (Fictícia)</div>
+          <div class="cd-v wr" id="dInv">R$ 1.890,00</div>
+        </div>
+        <div style="text-align:right">
+          <div class="cd-l">Vencimento</div>
+          <div style="font-weight:600;font-size:.9rem" id="dDue">15/10/2026</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div class="cd" style="text-align:center;cursor:pointer" onclick="nav('pix')">
+        <div style="font-size:1.6rem;margin-bottom:6px">⚡</div>
+        <div style="font-weight:700;font-size:.8rem">Pix Simulado</div>
+      </div>
+      <div class="cd" style="text-align:center;cursor:pointer" onclick="nav('invoice')">
+        <div style="font-size:1.6rem;margin-bottom:6px">💳</div>
+        <div style="font-weight:700;font-size:.8rem">Fatura Demo</div>
+      </div>
+    </div>
+    <div class="cd">
+      <div style="font-weight:700;font-size:.9rem;margin-bottom:10px">Últimas Movimentações <span class="ts tm">(Fictícias)</span></div>
+      <div id="txList"></div>
+    </div>
+    <button class="btn btn-o" onclick="openEdit()">✏️ Editar Dados da Demonstração</button>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div class="pg" id="pgAcc">
+    <div class="sw">⚠ CONTA FICTÍCIA — NENHUM DADO REAL — SEM VALOR FINANCEIRO</div>
+    <div class="cd">
+      <div class="cd-l">Nome do Titular (Fictício)</div>
+      <div style="font-weight:700;font-size:1.1rem" id="aName">Carlos Mendes</div>
+    </div>
+    <div class="cd">
+      <div class="cd-l">Agência (Fictícia)</div>
+      <div style="font-weight:600">0001</div>
+      <div class="cd-l" style="margin-top:10px">Conta (Fictícia)</div>
+      <div style="font-weight:600">12345-6</div>
+    </div>
+    <div class="cd">
+      <div class="cd-l">Saldo Demonstrativo</div>
+      <div class="cd-v ac" id="aBal">R$ 12.450,00</div>
+    </div>
+    <div class="cd">
+      <div class="cd-l">Fatura Demonstrativa</div>
+      <div class="cd-v wr" id="aInv">R$ 1.890,00</div>
+    </div>
+    <div class="cd">
+      <div style="font-weight:700;font-size:.9rem;margin-bottom:10px">Movimentações <span class="ts tm">(Fictícias)</span></div>
+      <div id="aTxList"></div>
+    </div>
+    <button class="btn btn-o" onclick="openEdit()">✏️ Editar Dados da Demonstração</button>
+  </div>
+
+  <!-- INVOICE -->
+  <div class="pg" id="pgInv">
+    <div class="sw">⚠ DADOS FICTÍCIOS — SEM VALOR FINANCEIRO</div>
+    <div class="cc">
+      <div class="cc-fl">DEMO</div>
+      <div class="cc-chip"></div>
+      <div class="cc-num">•••• •••• •••• 4478</div>
+      <div class="cc-bt">
+        <div>
+          <div class="cc-nm" id="ccNm">CARLOS MENDES</div>
+          <div style="font-size:.6rem;color:rgba(255,255,255,.4);margin-top:2px">Validade: 12/28</div>
+        </div>
+        <div class="cc-br">AURORA</div>
+      </div>
+    </div>
+    <div class="cd">
+      <div class="fb">
+        <div>
+          <div class="cd-l">Valor da Fatura (Fictícia)</div>
+          <div class="cd-v wr" id="iVal">R$ 1.890,00</div>
+        </div>
+        <div style="text-align:right">
+          <div class="cd-l">Vencimento</div>
+          <div style="font-weight:600;font-size:.9rem" id="iDue">15/10/2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="cd">
+      <div class="cd-l">Limite (Fictício)</div>
+      <div class="cd-v gl" id="iLim">R$ 8.000,00</div>
+      <div style="margin-top:10px;height:6px;background:var(--card2);border-radius:3px;overflow:hidden">
+        <div id="iBar" style="height:100%;background:var(--warn);border-radius:3px;width:23.6%;transition:width .5s ease"></div>
+      </div>
+      <div class="ts tm" style="margin-top:4px" id="iUse">23,6% utilizado</div>
+    </div>
+    <div class="cd">
+      <div style="font-weight:700;font-size:.9rem;margin-bottom:10px">Compras Demonstrativas</div>
+      <div id="purchList"></div>
+    </div>
+    <button class="btn btn-o" onclick="openInvEdit()">✏️ Editar Fatura Demo</button>
+  </div>
+
+  <!-- PIX -->
+  <div class="pg watermark" id="pgPix">
+    <div class="sw">⚠ PIX SIMULADO — NENHUM DINHEIRO SERÁ ENVIADO — SEM VALOR FINANCEIRO</div>
+    <div id="pixForm">
+      <div class="fg">
+        <label class="fl">Nome do Destinatário (Fictício)</label>
+        <input class="fi" id="pNm" placeholder="Ex: Maria Souza" autocomplete="off">
+      </div>
+      <div class="fg">
+        <label class="fl">Chave Pix (Fictícia)</label>
+        <input class="fi" id="pKy" placeholder="Ex: maria@demo.com" autocomplete="off">
+      </div>
+      <div class="fg">
+        <label class="fl">Valor (Fictício)</label>
+        <input class="fi" id="pVl" type="number" step="0.01" min="0" placeholder="0,00" autocomplete="off">
+      </div>
+      <div class="fg">
+        <label class="fl">Descrição (Opcional)</label>
+        <input class="fi" id="pDc" placeholder="Ex: Teste de simulação" autocomplete="off">
+      </div>
+      <button class="btn btn-p" onclick="startPix()">⚡ SIMULAR PIX</button>
+    </div>
+    <div id="pixConf" style="display:none">
+      <div class="sw" style="font-size:.9rem;font-weight:800">⛔ ESTA É UMA SIMULAÇÃO. NENHUM DINHEIRO SERÁ ENVIADO.</div>
+      <div class="cd">
+        <div class="cd-r"><span class="tm">Destinatário</span><span style="font-weight:600" id="cNm">—</span></div>
+        <div class="cd-r"><span class="tm">Chave Pix</span><span style="font-weight:600" id="cKy">—</span></div>
+        <div class="cd-r"><span class="tm">Valor</span><span style="font-weight:700;color:var(--accent)" id="cVl">—</span></div>
+        <div class="cd-r" id="cDcR" style="display:none"><span class="tm">Descrição</span><span style="font-weight:600" id="cDc">—</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <button class="btn btn-o" onclick="cancelPix()">Cancelar</button>
+        <button class="btn btn-p" onclick="execPix()">Confirmar Simulação</button>
+      </div>
+    </div>
+    <div id="pixOk" style="display:none">
+      <div class="pxa">
+        <div class="pxc"><span class="pxc-s">✓</span></div>
+        <div style="font-size:1rem;font-weight:700;color:var(--accent);margin-top:20px;line-height:1.5">SIMULAÇÃO CONCLUÍDA<br>NENHUM DINHEIRO FOI ENVIADO</div>
+      </div>
+      <button class="btn btn-p" onclick="showRcp()">🧾 Ver Comprovante Fictício</button>
+      <button class="btn btn-o mt16" onclick="resetPix()">Nova Simulação</button>
+    </div>
+  </div>
+
+  <!-- RECEIPT -->
+  <div class="pg watermark" id="pgRcp">
+    <div class="sw">⚠ COMPROVANTE FICTÍCIO — NÃO É COMPROVANTE DE PAGAMENTO REAL</div>
+    <div class="rcp" id="rcpContent">
+      <div class="rcp-h">
+        <h2>COMPROVANTE FICTÍCIO</h2>
+        <div style="font-size:.7rem;color:var(--a1);opacity:.7;margin-top:4px">PIX SIMULADO — SEM VALOR FINANCEIRO</div>
+      </div>
+      <div class="rcp-st">🚫 ESTE DOCUMENTO NÃO COMPROVA<br>PAGAMENTO OU TRANSFERÊNCIA REAL</div>
+      <div class="rcp-b">
+        <div class="rcp-r"><span class="rcp-l">Remetente</span><span class="rcp-v" id="rSr">—</span></div>
+        <div class="rcp-r"><span class="rcp-l">Destinatário</span><span class="rcp-v" id="rRc">—</span></div>
+        <div class="rcp-r"><span class="rcp-l">Chave Pix (Fictícia)</span><span class="rcp-v" id="rKy">—</span></div>
+        <div class="rcp-r"><span class="rcp-l">Valor</span><span class="rcp-v" id="rVl">—</span></div>
+        <div class="rcp-r"><span class="rcp-l">Data e Horário</span><span class="rcp-v" id="rDt">—</span></div>
+        <div class="rcp-r"><span class="rcp-l">ID da Simulação</span><span class="rcp-v" id="rId">—</span></div>
+        <div class="rcp-r" id="rDcR" style="display:none"><span class="rcp-l">Descrição</span><span class="rcp-v" id="rDc">—</span></div>
+        <div class="rcp-r"><span class="rcp-l">Status</span><span class="rcp-v" style="color:#00a878">SIMULAÇÃO CONCLUÍDA</span></div>
+      </div>
+      <div class="rcp-f">Banco Aurora Demo — DEMONSTRAÇÃO FICTÍCIA<br>Este comprovante não possui valor legal ou financeiro.</div>
+    </div>
+    <button class="btn btn-o mt16" onclick="printRcp()">🖨️ IMPRIMIR DEMONSTRAÇÃO</button>
+    <button class="btn btn-p mt16" onclick="nav('home')">Voltar ao Início</button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="ni on" data-p="home" onclick="nav('home')"><span class="ni-i">🏠</span>Início</div>
+  <div class="ni" data-p="acc" onclick="nav('acc')"><span class="ni-i">👤</span>Conta</div>
+  <div class="ni" data-p="invoice" onclick="nav('invoice')"><span class="ni-i">💳</span>Fatura</div>
+  <div class="ni" data-p="pix" onclick="nav('pix')"><span class="ni-i">⚡</span>Pix</div>
+  <div class="ni" data-p="rcp" onclick="nav('rcp')"><span class="ni-i">🧾</span>Recibo</div>
+</nav>
+
+<!-- EDIT ACCOUNT MODAL -->
+<div class="mo" id="editMo">
+  <div class="md">
+    <div class="md-h"></div>
+    <div class="md-t">✏️ Editar Dados Demonstrativos</div>
+    <div class="sw">⚠ Todos os dados são fictícios e sem valor financeiro</div>
+    <div class="fg">
+      <label class="fl">Nome</label>
+      <input class="fi" id="eNm" autocomplete="off">
+    </div>
+    <div class="fg">
+      <label class="fl">Saldo (Fictício)</label>
+      <input class="fi" id="eBal" type="number" step="0.01" autocomplete="off">
+    </div>
+    <div class="fg">
+      <label class="fl">Fatura (Fictícia)</label>
+      <input class="fi" id="eInv" type="number" step="0.01" autocomplete="off">
+    </div>
+    <div id="eTxF"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+      <button class="btn btn-o" onclick="closeEdit()">Cancelar</button>
+      <button class="btn btn-p" onclick="saveAcc()">Salvar Demo</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT INVOICE MODAL -->
+<div class="mo" id="invMo">
+  <div class="md">
+    <div class="md-h"></div>
+    <div class="md-t">✏️ Editar Fatura Demo</div>
+    <div class="sw">⚠ Dados fictícios — sem valor financeiro</div>
+    <div class="fg">
+      <label class="fl">Valor da Fatura</label>
+      <input class="fi" id="eIV" type="number" step="0.01" autocomplete="off">
+    </div>
+    <div class="fg">
+      <label class="fl">Data de Vencimento</label>
+      <input class="fi" id="eID" type="date" autocomplete="off">
+    </div>
+    <div class="fg">
+      <label class="fl">Limite (Fictício)</label>
+      <input class="fi" id="eIL" type="number" step="0.01" autocomplete="off">
+    </div>
+    <div id="ePF"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+      <button class="btn btn-o" onclick="closeInvEdit()">Cancelar</button>
+      <button class="btn btn-p" onclick="saveInv()">Salvar Demo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   BANCO AURORA DEMO — 100% FICTÍCIO — SEM VALOR FINANCEIRO
+   ================================================================ */
+
+const DEF = {
+  name: 'Carlos Mendes',
+  balance: 12450.00,
+  invoice: 1890.00,
+  dueDate: '2026-10-15',
+  limit: 8000.00,
+  transactions: [
+    {title:'Salário (Demo)',date:'10/09/2026',amount:5500.00,type:'gn',icon:'💰'},
+    {title:'Mercado Demo',date:'08/09/2026',amount:-342.50,type:'rd',icon:'🛒'},
+    {title:'Stream Fictício',date:'05/09/2026',amount:-55.90,type:'rd',icon:'🎬'},
+    {title:'Transferência Recebida',date:'03/09/2026',amount:200.00,type:'gn',icon:'📥'},
+    {title:'Farmácia Demo',date:'01/09/2026',amount:-87.30,type:'rd',icon:'💊'},
+    {title:'Restaurante Fictício',date:'28/08/2026',amount:-124.00,type:'rd',icon:'🍽️'}
+  ],
+  purchases: [
+    {name:'Supermercado Demo',value:420.50},
+    {name:'Combustível Fictício',value:285.00},
+    {name:'App de Streaming Demo',value:55.90},
+    {name:'Loja Online Demo',value:389.00},
+    {name:'Farmácia Fictícia',value:187.60},
+    {name:'Restaurante Demo',value:234.00},
+    {name:'Outras Compras Demo',value:318.00}
+  ]
+};
+
+let D = load();
+
+function load(){
+  try{
+    const s=localStorage.getItem('aurora_demo');
+    if(s)return JSON.parse(s);
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEF));
+}
+function save(){localStorage.setItem('aurora_demo',JSON.stringify(D))}
+
+function fmt(v){return 'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+function fmtDate(d){
+  const p=d.split('-');
+  if(p.length===3)return p[2]+'/'+p[1]+'/'+p[0];
+  return d;
+}
+
+// RENDER
+function render(){
+  document.getElementById('dBal').textContent=fmt(D.balance);
+  document.getElementById('dInv').textContent=fmt(D.invoice);
+  document.getElementById('dDue').textContent=fmtDate(D.dueDate);
+  document.getElementById('aName').textContent=D.name;
+  document.getElementById('aBal').textContent=fmt(D.balance);
+  document.getElementById('aInv').textContent=fmt(D.invoice);
+  document.getElementById('ccNm').textContent=D.name.toUpperCase();
+  document.getElementById('iVal').textContent=fmt(D.invoice);
+  document.getElementById('iDue').textContent=fmtDate(D.dueDate);
+  document.getElementById('iLim').textContent=fmt(D.limit);
+  const pct=Math.min(100,(D.invoice/D.limit)*100);
+  document.getElementById('iBar').style.width=pct+'%';
+  document.getElementById('iUse').textContent=pct.toFixed(1).replace('.',',')+'% utilizado';
+
+  // transactions
+  let txH='';
+  D.transactions.forEach(t=>{
+    const cls=t.amount>=0?'pos':'neg';
+    const sign=t.amount>=0?'+':'';
+    txH+=`<div class="tx"><div class="tx-i ${t.type}">${t.icon}</div><div class="tx-n"><div class="tx-t">${t.title}</div><div class="tx-d">${t.date}</div></div><div class="tx-a ${cls}">${sign}${fmt(t.amount)}</div></div>`;
+  });
+  document.getElementById('txList').innerHTML=txH;
+  document.getElementById('aTxList').innerHTML=txH;
+
+  // purchases
+  let pH='';
+  D.purchases.forEach(p=>{
+    pH+=`<div class="pi"><span class="pi-n">${p.name}</span><span class="pi-v">${fmt(p.value)}</span></div>`;
+  });
+  document.getElementById('purchList').innerHTML=pH;
+}
+
+// NAVIGATION
+const pages={home:'pgHome',acc:'pgAcc',invoice:'pgInv',pix:'pgPix',rcp:'pgRcp'};
+const navMap={home:0,acc:1,invoice:2,pix:3,rcp:4};
+
+function nav(p){
+  document.querySelectorAll('.pg').forEach(el=>el.classList.remove('on'));
+  document.getElementById(pages[p]).classList.add('on');
+  document.querySelectorAll('.ni').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('.ni')[navMap[p]].classList.add('on');
+  window.scrollTo(0,0);
+}
+
+// EDIT ACCOUNT
+function openEdit(){
+  document.getElementById('eNm').value=D.name;
+  document.getElementById('eBal').value=D.balance;
+  document.getElementById('eInv').value=D.invoice;
+  let f='';
+  D.transactions.forEach((t,i)=>{
+    f+=`<div class="fg"><label class="fl">Movimentação ${i+1}</label><input class="fi" id="eTx${i}" value="${t.title}" autocomplete="off"></div>`;
+  });
+  document.getElementById('eTxF').innerHTML=f;
+  document.getElementById('editMo').classList.add('show');
+}
+function closeEdit(){document.getElementById('editMo').classList.remove('show')}
+function saveAcc(){
+  D.name=document.getElementById('eNm').value||D.name;
+  D.balance=parseFloat(document.getElementById('eBal').value)||D.balance;
+  D.invoice=parseFloat(document.getElementById('eInv').value)||D.invoice;
+  D.transactions.forEach((t,i)=>{
+    const v=document.getElementById('eTx'+i);
+    if(v)t.title=v.value||t.title;
+  });
+  save();render();closeEdit();
+}
+
+// EDIT INVOICE
+function openInvEdit(){
+  document.getElementById('eIV').value=D.invoice;
+  document.getElementById('eID').value=D.dueDate;
+  document.getElementById('eIL').value=D.limit;
+  let f='';
+  D.purchases.forEach((p,i)=>{
+    f+=`<div class="fg"><label class="fl">Compra ${i+1}</label><div style="display:grid;grid-template-columns:2fr 1fr;gap:8px"><input class="fi" id="ePN${i}" value="${p.name}" autocomplete="off"><input class="fi" id="ePV${i}" type="number" step="0.01" value="${p.value}" autocomplete="off"></div></div>`;
+  });
+  document.getElementById('ePF').innerHTML=f;
+  document.getElementById('invMo').classList.add('show');
+}
+function closeInvEdit(){document.getElementById('invMo').classList.remove('show')}
+function saveInv(){
+  D.invoice=parseFloat(document.getElementById('eIV').value)||D.invoice;
+  D.dueDate=document.getElementById('eID').value||D.dueDate;
+  D.limit=parseFloat(document.getElementById('eIL').value)||D.limit;
+  D.purchases.forEach((p,i)=>{
+    const n=document.getElementById('ePN'+i);
+    const v=document.getElementById('ePV'+i);
+    if(n)p.name=n.value||p.name;
+    if(v)p.value=parseFloat(v.value)||p.value;
+  });
+  save();render();closeInvEdit();
+}
+
+// CLOSE MODALS ON OVERLAY
+document.getElementById('editMo').addEventListener('click',function(e){if(e.target===this)closeEdit()});
+document.getElementById('invMo').addEventListener('click',function(e){if(e.target===this)closeInvEdit()});
+
+// PIX SIMULATION
+let pixData=null;
+
+function startPix(){
+  const nm=document.getElementById('pNm').value.trim();
+  const ky=document.getElementById('pKy').value.trim();
+  const vl=parseFloat(document.getElementById('pVl').value);
+  const dc=document.getElementById('pDc').value.trim();
+  if(!nm||!ky||!vl||vl<=0){
+    alert('Preencha nome, chave Pix e valor para a simulação.');
+    return;
+  }
+  pixData={name:nm,key:ky,value:vl,desc:dc};
+  document.getElementById('cNm').textContent=nm;
+  document.getElementById('cKy').textContent=ky;
+  document.getElementById('cVl').textContent=fmt(vl);
+  if(dc){
+    document.getElementById('cDcR').style.display='flex';
+    document.getElementById('cDc').textContent=dc;
+  }else{
+    document.getElementById('cDcR').style.display='none';
+  }
+  document.getElementById('pixForm').style.display='none';
+  document.getElementById('pixConf').style.display='block';
+}
+
+function cancelPix(){
+  document.getElementById('pixConf').style.display='none';
+  document.getElementById('pixForm').style.display='block';
+  pixData=null;
+}
+
+function execPix(){
+  document.getElementById('pixConf').style.display='none';
+  document.getElementById('pixOk').style.display='block';
+  pixData.date=new Date().toLocaleString('pt-BR');
+  pixData.id='SIM-'+Math.random().toString(36).substr(2,8).toUpperCase();
+}
+
+function showRcp(){
+  if(!pixData)return;
+  document.getElementById('rSr').textContent=D.name;
+  document.getElementById('rRc').textContent=pixData.name;
+  document.getElementById('rKy').textContent=pixData.key;
+  document.getElementById('rVl').textContent=fmt(pixData.value);
+  document.getElementById('rDt').textContent=pixData.date;
+  document.getElementById('rId').textContent=pixData.id;
+  if(pixData.desc){
+    document.getElementById('rDcR').style.display='flex';
+    document.getElementById('rDc').textContent=pixData.desc;
+  }else{
+    document.getElementById('rDcR').style.display='none';
+  }
+  nav('rcp');
+}
+
+function resetPix(){
+  document.getElementById('pixOk').style.display='none';
+  document.getElementById('pixForm').style.display='block';
+  document.getElementById('pNm').value='';
+  document.getElementById('pKy').value='';
+  document.getElementById('pVl').value='';
+  document.getElementById('pDc').value='';
+  pixData=null;
+}
+
+// PRINT
+function printRcp(){window.print()}
+
+// INIT
+render();
+</script>
+</body>
+</html>
