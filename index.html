@@ -78,7 +78,7 @@ h2{font-size:19px;margin:0 0 8px}p{color:var(--muted);line-height:1.6}
 </header>
 
 <!-- INÍCIO -->
-<section class="page" id="inicio">
+<section class="page active" id="inicio">
   <div class="eyebrow">Banco Aurora Demo</div>
   <h1>Olá, <span id="homeName">Cliente Demo</span>.</h1>
   <p>Uma experiência bancária premium para demonstração e testes. Tudo nesta aplicação é fictício e local.</p>
@@ -229,16 +229,16 @@ const defaults={
 };
 let state=load(),pending=null;
 
-function load(){try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch{return structuredClone(defaults)}}
+function load(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(!saved||typeof saved!=="object") return structuredClone(defaults);
+    return {...structuredClone(defaults),...saved,movements:Array.isArray(saved.movements)?saved.movements:structuredClone(defaults.movements),history:Array.isArray(saved.history)?saved.history:[],lastReceipt:saved.lastReceipt||null};
+  }catch(e){return structuredClone(defaults)}
+}
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
 function money(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
 function dateBR(v){return v?new Date(v+"T12:00:00").toLocaleDateString("pt-BR"):"—"}
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 function toast(t){const x=document.getElementById("toast");x.textContent=t;x.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>x.classList.remove("show"),2500)}
-function id(){return "DEMO-"+String(state.history.length+1).padStart(6,"0")}
-
-function route(){
- let r=(location.hash.split("/")[1]||"inicio").split("?")[0];
- if(r==="comprovante"&&!state.lastReceipt)r="pix";
- document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- document.getElementById(r)?.classL
+    
