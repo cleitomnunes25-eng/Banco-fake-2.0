@@ -21,6 +21,11 @@
             min-height: 100vh;
         }
 
+        /* Classe utilitária para esconder elementos */
+        .hidden {
+            display: none !important;
+        }
+
         .app-container {
             width: 100%;
             max-width: 420px;
@@ -75,12 +80,24 @@
         .user-greeting {
             font-size: 1.1rem;
             font-weight: 600;
-            outline: none;
-            border-bottom: 1px dashed transparent;
         }
 
-        .user-greeting:hover {
-            border-bottom-color: rgba(255,255,255,0.5);
+        /* Campos Editáveis */
+        .editable-field {
+            outline: none;
+            border-radius: 4px;
+            padding: 2px 4px;
+            transition: background 0.2s;
+        }
+
+        .editable-field:hover, .editable-field:focus {
+            background-color: #f0e6ff;
+            color: #111;
+        }
+
+        .header .editable-field:hover, .header .editable-field:focus {
+            background-color: rgba(255,255,255,0.2);
+            color: #fff;
         }
 
         /* Content */
@@ -108,17 +125,6 @@
             margin-bottom: 12px;
         }
 
-        .editable-field {
-            outline: none;
-            border-radius: 4px;
-            padding: 2px 4px;
-            transition: background 0.2s;
-        }
-
-        .editable-field:hover, .editable-field:focus {
-            background-color: #f0e6ff;
-        }
-
         .balance-amount {
             font-size: 1.5rem;
             font-weight: 700;
@@ -132,7 +138,7 @@
             border-radius: 4px;
         }
 
-        /* Quick Actions */
+        /* Botões Rápidos */
         .quick-actions {
             display: flex;
             gap: 12px;
@@ -152,6 +158,7 @@
             align-items: center;
             min-width: 72px;
             cursor: pointer;
+            user-select: none;
         }
 
         .action-icon {
@@ -179,6 +186,7 @@
             text-align: center;
         }
 
+        /* Cartão Virtual Button */
         .my-cards {
             background-color: #efeff4;
             border-radius: 12px;
@@ -191,6 +199,7 @@
             color: #111;
             margin-bottom: 16px;
             cursor: pointer;
+            user-select: none;
         }
 
         .my-cards-left {
@@ -199,7 +208,7 @@
             gap: 12px;
         }
 
-        /* Section Title & Transactions */
+        /* Extrato */
         .section-title {
             font-size: 1rem;
             font-weight: 700;
@@ -262,12 +271,12 @@
         .value-positive { color: #00875a; }
         .value-negative { color: #111; }
 
-        /* Modal Overlay */
+        /* Modais */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.6);
-            display: none;
+            display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -292,7 +301,7 @@
             color: #666;
         }
 
-        /* Dynamic Virtual Card Styling */
+        /* Cartão Virtual Visual */
         .virtual-card-box {
             background: linear-gradient(135deg, #820AD1 0%, #4D067A 100%);
             border-radius: 16px;
@@ -322,7 +331,7 @@
             font-size: 0.8rem;
         }
 
-        /* Modal Input Form */
+        /* Formulário do Modal */
         .form-group {
             margin-bottom: 14px;
         }
@@ -384,12 +393,12 @@
                     <i class="fa-solid fa-user"></i>
                 </div>
                 <div class="header-icons">
-                    <i class="fa-regular fa-eye" id="toggle-eye" onclick="toggleSaldo()"></i>
+                    <i class="fa-regular fa-eye" id="toggle-eye"></i>
                     <i class="fa-regular fa-circle-question"></i>
                     <i class="fa-regular fa-envelope"></i>
                 </div>
             </div>
-            <!-- Clique para editar o nome -->
+            <!-- Clique no nome para editar -->
             <div class="user-greeting">
                 Olá, <span contenteditable="true" class="editable-field" id="user-name">Usuário</span>
             </div>
@@ -404,14 +413,14 @@
                     <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; color: #666;"></i>
                 </div>
                 <div class="balance-amount" id="balance-value">
-                    R$ <span contenteditable="true" class="editable-field" id="raw-balance">1250.40</span>
+                    R$ <span contenteditable="true" class="editable-field" id="raw-balance">1.250,40</span>
                 </div>
-                <div class="balance-hidden" id="balance-hidden" style="display: none;"></div>
+                <div class="balance-hidden hidden" id="balance-hidden"></div>
             </div>
 
             <!-- Botões Rápido -->
             <div class="quick-actions">
-                <div class="action-item" onclick="openPixModal()">
+                <div class="action-item" id="btn-pix">
                     <div class="action-icon"><i class="fa-brands fa-pix"></i></div>
                     <span class="action-label">Pix</span>
                 </div>
@@ -430,7 +439,7 @@
             </div>
 
             <!-- Botão Cartão Virtual -->
-            <div class="my-cards" onclick="openCardModal()">
+            <div class="my-cards" id="btn-card">
                 <div class="my-cards-left">
                     <i class="fa-solid fa-credit-card" style="color: #820AD1;"></i>
                     <span>Cartão Virtual</span>
@@ -446,10 +455,10 @@
                 </div>
                 <p style="font-size: 0.85rem; color: #666; margin-bottom: 4px;">Fatura atual</p>
                 <div class="balance-amount" style="color: #00875a;">
-                    R$ <span contenteditable="true" class="editable-field">380.20</span>
+                    R$ <span contenteditable="true" class="editable-field">380,20</span>
                 </div>
                 <p style="font-size: 0.8rem; color: #666; margin-top: 6px;">
-                    Limite disponível: R$ <span contenteditable="true" class="editable-field">2120.00</span>
+                    Limite disponível: R$ <span contenteditable="true" class="editable-field">2.120,00</span>
                 </p>
             </div>
 
@@ -478,9 +487,9 @@
     </div>
 
     <!-- MODAL CARTÃO VIRTUAL -->
-    <div class="modal-overlay" id="card-modal">
+    <div class="modal-overlay hidden" id="card-modal">
         <div class="modal-card">
-            <i class="fa-solid fa-xmark modal-close" onclick="closeCardModal()"></i>
+            <i class="fa-solid fa-xmark modal-close" id="btn-close-card"></i>
             <h3 style="font-size: 1.1rem; color: #111;">Seu Cartão Virtual</h3>
             <p style="font-size: 0.75rem; color: #666; margin-top: 4px;">Clique nos dados para editá-los livremente.</p>
 
@@ -495,7 +504,7 @@
                 <div class="vc-bottom">
                     <div>
                         <div style="font-size: 0.65rem; opacity: 0.8;">TITULAR</div>
-                        <div contenteditable="true" class="editable-field" id="card-holder-name">NOME DO TITULAR</div>
+                        <div contenteditable="true" class="editable-field" id="card-holder-name">USUÁRIO</div>
                     </div>
                     <div>
                         <div style="font-size: 0.65rem; opacity: 0.8;">VALIDADE</div>
@@ -507,101 +516,90 @@
                     </div>
                 </div>
             </div>
-            <button class="btn-submit" onclick="closeCardModal()">Concluído</button>
+            <button class="btn-submit" id="btn-done-card">Concluído</button>
         </div>
     </div>
 
-    <!-- MODAL PIX (FAZER PIX) -->
-    <div class="modal-overlay" id="pix-modal">
+    <!-- MODAL PIX -->
+    <div class="modal-overlay hidden" id="pix-modal">
         <div class="modal-card">
-            <i class="fa-solid fa-xmark modal-close" onclick="closePixModal()"></i>
+            <i class="fa-solid fa-xmark modal-close" id="btn-close-pix"></i>
             <h3 style="font-size: 1.1rem; color: #111; margin-bottom: 12px;">Área Pix</h3>
             
             <div class="form-group">
-                <label>Tipo de Operação</label>
+                <label for="pix-type">Tipo de Operação</label>
                 <select id="pix-type">
                     <option value="send">Enviar Pix (Saída)</option>
                     <option value="receive">Receber Pix (Entrada)</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Nome da Pessoa / Empresa</label>
+                <label for="pix-name">Nome da Pessoa / Empresa</label>
                 <input type="text" id="pix-name" placeholder="Ex: João da Silva">
             </div>
             <div class="form-group">
-                <label>Valor (R$)</label>
+                <label for="pix-amount">Valor (R$)</label>
                 <input type="number" id="pix-amount" placeholder="0.00" step="0.01">
             </div>
 
-            <button class="btn-submit" onclick="executePix()">Confirmar Pix</button>
+            <button class="btn-submit" id="btn-confirm-pix">Confirmar Pix</button>
         </div>
     </div>
 
+    <!-- SCRIPT DE INTERAÇÕES E EVENTOS -->
     <script>
-        // Alternar visibilidade do saldo
-        function toggleSaldo() {
+        document.addEventListener('DOMContentLoaded', () => {
+            // Elementos
+            const toggleEye = document.getElementById('toggle-eye');
             const balanceValue = document.getElementById('balance-value');
             const balanceHidden = document.getElementById('balance-hidden');
-            const eyeIcon = document.getElementById('toggle-eye');
 
-            if (balanceValue.style.display === 'none') {
-                balanceValue.style.display = 'block';
-                balanceHidden.style.display = 'none';
-                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
-            } else {
-                balanceValue.style.display = 'none';
-                balanceHidden.style.display = 'block';
-                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
-            }
-        }
+            const btnPix = document.getElementById('btn-pix');
+            const pixModal = document.getElementById('pix-modal');
+            const btnClosePix = document.getElementById('btn-close-pix');
+            const btnConfirmPix = document.getElementById('btn-confirm-pix');
 
-        // Modais do Cartão Virtual
-        function openCardModal() {
-            const currentName = document.getElementById('user-name').innerText;
-            document.getElementById('card-holder-name').innerText = currentName.toUpperCase();
-            document.getElementById('card-modal').style.display = 'flex';
-        }
-        function closeCardModal() {
-            document.getElementById('card-modal').style.display = 'none';
-        }
+            const btnCard = document.getElementById('btn-card');
+            const cardModal = document.getElementById('card-modal');
+            const btnCloseCard = document.getElementById('btn-close-card');
+            const btnDoneCard = document.getElementById('btn-done-card');
 
-        // Modais do Pix
-        function openPixModal() {
-            document.getElementById('pix-modal').style.display = 'flex';
-        }
-        function closePixModal() {
-            document.getElementById('pix-modal').style.display = 'none';
-        }
+            // 1. Mostrar/Ocultar Saldo
+            let isBalanceVisible = true;
+            toggleEye.addEventListener('click', () => {
+                isBalanceVisible = !isBalanceVisible;
+                if (isBalanceVisible) {
+                    balanceValue.classList.remove('hidden');
+                    balanceHidden.classList.add('hidden');
+                    toggleEye.classList.remove('fa-eye-slash');
+                    toggleEye.classList.add('fa-eye');
+                } else {
+                    balanceValue.classList.add('hidden');
+                    balanceHidden.classList.remove('hidden');
+                    toggleEye.classList.remove('fa-eye');
+                    toggleEye.classList.add('fa-eye-slash');
+                }
+            });
 
-        // Executar e Simular Pix
-        function executePix() {
-            const type = document.getElementById('pix-type').value;
-            const name = document.getElementById('pix-name').value || 'Transação Pix';
-            const amount = parseFloat(document.getElementById('pix-amount').value);
+            // 2. Modal Cartão Virtual
+            btnCard.addEventListener('click', () => {
+                const userName = document.getElementById('user-name').innerText.trim();
+                document.getElementById('card-holder-name').innerText = userName.toUpperCase() || 'TITULAR';
+                cardModal.classList.remove('hidden');
+            });
 
-            if (isNaN(amount) || amount <= 0) {
-                alert('Digite um valor válido!');
-                return;
-            }
+            btnCloseCard.addEventListener('click', () => cardModal.classList.add('hidden'));
+            btnDoneCard.addEventListener('click', () => cardModal.classList.add('hidden'));
 
-            const rawBalanceElem = document.getElementById('raw-balance');
-            let currentBalance = parseFloat(rawBalanceElem.innerText.replace(',', '.'));
+            // 3. Modal Pix
+            btnPix.addEventListener('click', () => {
+                pixModal.classList.remove('hidden');
+            });
 
-            let isPositive = type === 'receive';
-            let newBalance = isPositive ? (currentBalance + amount) : (currentBalance - amount);
-            rawBalanceElem.innerText = newBalance.toFixed(2);
+            btnClosePix.addEventListener('click', () => pixModal.classList.add('hidden'));
 
-            // Adicionar ao extrato
-            const transactionList = document.getElementById('transaction-list');
-            const newItem = document.createElement('div');
-            newItem.className = 'transaction-item';
-            
-            const formattedVal = amount.toFixed(2).replace('.', ',');
-            const sign = isPositive ? '+ R$' : '- R$';
-            const valClass = isPositive ? 'value-positive' : 'value-negative';
-
-            newItem.innerHTML = `
-                <div class="transaction-info">
-                    <div class="transaction-icon"><i class="fa-brands fa-pix"></i></div>
-                    <div class="transaction-details">
-                
+            // 4. Executar Pix e Atualizar Saldo
+            btnConfirmPix.addEventListener('click', () => {
+                const type = document.getElementById('pix-type').value;
+                const name = document.getElementById('pix-name').value.trim() || 'Transação Pix';
+                const 
