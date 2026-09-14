@@ -1,293 +1,433 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#07101f">
-<title>Banco Aurora Demo — Demonstração Fictícia</title>
-<style>
-*{box-sizing:border-box}
-:root{
-  --bg:#050b16;--bg2:#0a1425;--card:#101f38;--card2:#142746;
-  --cyan:#28f0dc;--cyan2:#0bbba9;--pink:#ff2864;--gold:#ffd166;
-  --text:#f4f7fb;--muted:#91a0b8;--line:rgba(255,255,255,.09);
-  --radius:18px;--shadow:0 14px 45px rgba(0,0,0,.34)
-}
-html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(circle at 80% 5%,#21122e 0,#071322 38%,#050b16 75%);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
-button,input{font:inherit}
-button{cursor:pointer}
-.simbar{position:fixed;z-index:10000;top:0;left:0;right:0;background:linear-gradient(90deg,#ff1858,#c71962);color:#fff;text-align:center;font-weight:900;font-size:clamp(11px,2.7vw,15px);letter-spacing:.06em;padding:9px 8px;box-shadow:0 4px 20px rgba(255,24,88,.28)}
-.app{width:min(100%,1120px);margin:auto;padding:66px 18px 110px}
-.header{display:flex;align-items:center;justify-content:space-between;padding:14px 0 24px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,var(--cyan),#78fff1);color:#04121c;display:grid;place-items:center;font-size:25px;font-weight:950;box-shadow:0 0 28px rgba(40,240,220,.2)}
-.brand b{font-size:18px}.brand small{display:block;color:var(--cyan);font-weight:800;font-size:10px;letter-spacing:.13em;margin-top:3px}
-.route{font-size:11px;color:var(--muted);background:rgba(255,255,255,.04);padding:9px 12px;border:1px solid var(--line);border-radius:12px}
-.page{display:none;animation:up .28s ease}.page.active{display:block}
-@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.card{background:linear-gradient(145deg,rgba(20,39,70,.96),rgba(11,28,51,.96));border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
-.notice{background:rgba(255,40,100,.1);border:1px solid rgba(255,40,100,.35);border-radius:14px;padding:13px 14px;text-align:center;color:#ff87a8;font-weight:850;font-size:12px;line-height:1.45;margin-bottom:16px}
-.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:800}
-.money{font-size:clamp(27px,7vw,38px);font-weight:900;margin-top:5px;overflow-wrap:anywhere}
-.cyan{color:var(--cyan)}.pink{color:var(--pink)}.gold{color:var(--gold)}
-.greeting{font-size:clamp(23px,6vw,34px);font-weight:900;margin:5px 0 18px}
-.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.action{min-height:108px;text-align:left}
-.icon{font-size:26px;margin-bottom:10px}.action b{display:block}.action span{color:var(--muted);font-size:11px}
-.btn{border:0;border-radius:13px;min-height:48px;padding:12px 18px;font-weight:850;transition:.18s transform,.18s opacity,.18s box-shadow;width:100%;color:var(--text);background:#203454}
-.btn:hover{box-shadow:0 8px 24px rgba(0,0,0,.22)}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.45;cursor:not-allowed}
-.primary{background:linear-gradient(135deg,var(--cyan),#7afff2);color:#03151b}.danger{background:linear-gradient(135deg,#ff2864,#ff5c86)}.outline{background:transparent;border:1px solid var(--line)}
-.row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0}.row+.row{border-top:1px solid var(--line)}
-.tx{display:flex;gap:12px;align-items:center;padding:13px 0}.tx+.tx{border-top:1px solid var(--line)}
-.txicon{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(40,240,220,.1);color:var(--cyan);flex:none}
-.txmain{min-width:0;flex:1}.txmain b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.txmain small{color:var(--muted)}
-.form{display:grid;gap:14px}.field label{display:block;color:var(--muted);font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}.input{width:100%;background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px 14px;outline:0}.input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(40,240,220,.1)}
-.help{color:var(--muted);font-size:11px;margin-top:5px}
-.toolbar{display:flex;gap:10px;margin-top:16px}.toolbar>*{flex:1}
-.toast{position:fixed;z-index:11000;left:50%;bottom:88px;transform:translate(-50%,20px);opacity:0;background:#122844;border:1px solid rgba(40,240,220,.35);color:#fff;border-radius:12px;padding:12px 16px;font-weight:800;font-size:13px;pointer-events:none;transition:.25s;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
-.nav{position:fixed;z-index:9000;bottom:0;left:0;right:0;background:rgba(5,11,22,.95);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;justify-content:center}
-.navin{width:min(100%,760px);display:grid;grid-template-columns:repeat(5,1fr)}
-.nav button{border:0;background:none;color:var(--muted);padding:10px 3px calc(10px + env(safe-area-inset-bottom));font-size:10px;font-weight:800}.nav button.active{color:var(--cyan)}.nav i{display:block;font-style:normal;font-size:20px;margin-bottom:3px}
-.watermark{position:relative;overflow:hidden}.watermark:after{content:"SIMULAÇÃO — SEM VALOR FINANCEIRO";position:absolute;inset:-30%;display:grid;place-items:center;transform:rotate(-25deg);font-size:clamp(28px,8vw,72px);font-weight:950;letter-spacing:.08em;color:rgba(255,40,100,.065);pointer-events:none;z-index:5;text-align:center}
-.receipt{background:#fff;color:#182033;border-radius:18px;overflow:hidden;position:relative}.receipt .rh{background:linear-gradient(135deg,var(--cyan),#7afff2);padding:20px;text-align:center}.receipt .rh b{color:#04151c}.status{margin:16px;border:3px solid #ff2864;color:#ff2864;background:#fff1f5;border-radius:12px;padding:13px;text-align:center;font-weight:950;font-size:12px}.rbody{padding:0 18px 18px}.rrow{display:flex;justify-content:space-between;gap:14px;padding:11px 0;font-size:13px}.rrow+.rrow{border-top:1px solid #e6e8ed}.rrow span:first-child{color:#697386}.rf{border-top:2px dashed #ddd;padding:15px;text-align:center;color:#777;font-size:11px;font-weight:700}
-.empty{text-align:center;padding:35px 10px;color:var(--muted)}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.desktop-only{display:none}.actions{grid-template-columns:1fr 1fr}.card{padding:17px}.app{padding-left:14px;padding-right:14px}}
-@media(min-width:701px){.mobile-only{display:none}.page.active{max-width:900px;margin:auto}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-@media print{
- body{background:#fff!important;color:#111!important}.simbar{position:static!important;background:#ff2864!important;color:#fff!important}.app{padding:20px!important;width:100%!important}.header,.nav,.toast,.btn{display:none!important}.page{display:none!important}.page.active{display:block!important}.receipt{box-shadow:none!important}.watermark:after{color:rgba(255,40,100,.15)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.status{border-color:#ff2864!important;color:#ff2864!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface Nubank</title>
+    <!-- Ícones do Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #e5e5e5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Moldura simulando a tela de celular */
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: #f5f5f7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Cabeçalho Roxo */
+        .header {
+            background-color: #820AD1;
+            color: white;
+            padding: 28px 20px 20px 20px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .user-profile {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 16px;
+            font-size: 1.2rem;
+        }
+
+        .header-icons i {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .header-icons i:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .user-greeting {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Conteúdo Principal */
+        .content {
+            padding: 16px 20px;
+            flex: 1;
+            padding-bottom: 80px;
+        }
+
+        /* Card Saldo e Fatura */
+        .card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: transform 0.1s ease;
+        }
+
+        .card:active {
+            transform: scale(0.99);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #111;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        .balance-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .balance-hidden {
+            width: 140px;
+            height: 24px;
+            background-color: #e2e2e8;
+            border-radius: 4px;
+        }
+
+        /* Carrossel de Ações Rápidas */
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            scrollbar-width: none;
+        }
+
+        .quick-actions::-webkit-scrollbar {
+            display: none;
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 72px;
+            cursor: pointer;
+        }
+
+        .action-icon {
+            width: 64px;
+            height: 64px;
+            background-color: #efeff4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #111;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+
+        .action-item:hover .action-icon {
+            background-color: #e2e2e8;
+        }
+
+        .action-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #111;
+            text-align: center;
+        }
+
+        /* Botão Meus Cartões */
+        .my-cards {
+            background-color: #efeff4;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        /* Títulos de Seção */
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #111;
+            margin: 20px 0 12px 0;
+        }
+
+        /* Lista de Extrato */
+        .transaction-list {
+            background-color: white;
+            border-radius: 16px;
+            padding: 12px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f5;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #f5f5f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #820AD1;
+        }
+
+        .transaction-details p {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .transaction-details span {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .transaction-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .value-positive {
+            color: #00875a;
+        }
+
+        .value-negative {
+            color: #111;
+        }
+
+        /* Barra de Navegação Inferior */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #e2e2e8;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #666;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .nav-item.active {
+            color: #820AD1;
+        }
+    </style>
 </head>
 <body>
-<div class="simbar">DEMONSTRAÇÃO — BANCO FICTÍCIO — SEM VALOR FINANCEIRO</div>
 
-<main class="app">
-<header class="header">
-  <div class="brand">
-    <div class="logo">✦</div>
-    <div><b>Banco Aurora</b><small>DEMONSTRAÇÃO FICTÍCIA</small></div>
-  </div>
-  <div class="route" id="routeLabel">#/inicio</div>
-</header>
+    <div class="app-container">
+        <!-- Cabeçalho -->
+        <header class="header">
+            <div class="header-top">
+                <div class="user-profile">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="header-icons">
+                    <i class="fa-regular fa-eye" id="toggle-eye" onclick="toggleSaldo()"></i>
+                    <i class="fa-regular fa-circle-question"></i>
+                    <i class="fa-regular fa-envelope"></i>
+                </div>
+            </div>
+            <div class="user-greeting">
+                Olá, Usuário
+            </div>
+        </header>
 
-<!-- INÍCIO -->
-<section class="page active" id="inicio">
-  <div class="notice">DADOS FICTÍCIOS — ESTA CONTA NÃO EXISTE — SEM VALOR FINANCEIRO</div>
-  <div class="greeting">Olá, <span id="homeName">Carlos Mendes</span> 👋</div>
-  <div class="grid">
-    <div class="card"><div class="eyebrow">Saldo disponível — fictício</div><div class="money cyan" id="homeBalance">R$ 12.450,00</div></div>
-    <div class="card"><div class="eyebrow">Fatura — fictícia</div><div class="money pink" id="homeInvoice">R$ 1.890,00</div><div class="help">Vencimento: <b id="homeDue">15/10/2026</b></div></div>
-  </div>
-  <div class="actions">
-    <button class="card action" data-go="pix"><div class="icon">⚡</div><b>Pix Simulado</b><span>Nenhum dinheiro será enviado</span></button>
-    <button class="card action" data-go="fatura"><div class="icon">▣</div><b>Fatura Demo</b><span>Dados totalmente fictícios</span></button>
-  </div>
-  <div class="card"><div class="eyebrow" style="margin-bottom:4px">Últimas movimentações — fictícias</div><div id="homeTx"></div></div>
-  <button class="btn outline" data-go="conta">✏️ Editar dados da demonstração</button>
-</section>
+        <!-- Conteúdo Principal -->
+        <main class="content">
+            <!-- Conta / Saldo -->
+            <div class="card">
+                <div class="card-header">
+                    <span>Conta</span>
+                    <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; color: #666;"></i>
+                </div>
+                <div class="balance-amount" id="balance-value">R$ 1.250,40</div>
+                <div class="balance-hidden" id="balance-hidden" style="display: none;"></div>
+            </div>
 
-<!-- CONTA -->
-<section class="page" id="conta">
-  <div class="notice">DADOS FICTÍCIOS — ESTA CONTA NÃO EXISTE — SEM VALOR FINANCEIRO</div>
-  <div class="card">
-    <div class="eyebrow">Dados demonstrativos</div>
-    <div class="form" style="margin-top:16px">
-      <div class="field"><label>Nome demonstrativo</label><input class="input" id="editName" type="text"><div class="help">Somente para esta demonstração.</div></div>
-      <div class="field"><label>Saldo demonstrativo (R$)</label><input class="input" id="editBalance" type="number" min="0" step="0.01"><div class="help">Valor fictício, sem movimentação financeira.</div></div>
+            <!-- Botões de Ação Rápida -->
+            <div class="quick-actions">
+                <div class="action-item">
+                    <div class="action-icon"><i class="fa-brands fa-pix"></i></div>
+                    <span class="action-label">Pix</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon"><i class="fa-solid fa-barcode"></i></div>
+                    <span class="action-label">Pagar</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                    <span class="action-label">Transferir</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon"><i class="fa-solid fa-piggy-bank"></i></div>
+                    <span class="action-label">Depositar</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <span class="action-label">Recarga</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                    <span class="action-label">Cobrar</span>
+                </div>
+            </div>
+
+            <!-- Botão Meus Cartões -->
+            <div class="my-cards">
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Meus cartões</span>
+            </div>
+
+            <!-- Card Cartão de Crédito -->
+            <div class="card">
+                <div class="card-header">
+                    <span>Cartão de crédito</span>
+                    <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; color: #666;"></i>
+                </div>
+                <p style="font-size: 0.85rem; color: #666; margin-bottom: 4px;">Fatura atual</p>
+                <div class="balance-amount" style="color: #00875a;">R$ 380,20</div>
+                <p style="font-size: 0.8rem; color: #666; margin-top: 6px;">Limite disponível: R$ 2.120,00</p>
+            </div>
+
+            <!-- Extrato de Transações -->
+            <h3 class="section-title">Histórico de Transações</h3>
+            <div class="transaction-list">
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                        <div class="transaction-details">
+                            <p>Supermercado Modelo</p>
+                            <span>Hoje, 14:20 • Cartão de débito</span>
+                        </div>
+                    </div>
+                    <span class="transaction-value value-negative">- R$ 145,90</span>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon"><i class="fa-brands fa-pix"></i></div>
+                        <div class="transaction-details">
+                            <p>Pix recebido - Maria Silva</p>
+                            <span>Ontem, 09:15 • Transferência</span>
+                        </div>
+                    </div>
+                    <span class="transaction-value value-positive">+ R$ 200,00</span>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon"><i class="fa-solid fa-mug-hot"></i></div>
+                        <div class="transaction-details">
+                            <p>Café & Cia</p>
+                            <span>12 Set • Cartão de débito</span>
+                        </div>
+                    </div>
+                    <span class="transaction-value value-negative">- R$ 18,50</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Navegação Inferior -->
+        <nav class="bottom-nav">
+            <div class="nav-item active"><i class="fa-solid fa-arrows-up-down"></i></div>
+            <div class="nav-item"><i class="fa-solid fa-dollar-sign"></i></div>
+            <div class="nav-item"><i class="fa-solid fa-bag-shopping"></i></div>
+        </nav>
     </div>
-    <div class="toolbar"><button class="btn primary" id="saveAccount">Salvar alterações</button><button class="btn outline" id="restoreData">Restaurar dados de demonstração</button></div>
-  </div>
-  <div class="grid">
-    <div class="card"><div class="eyebrow">Titular fictício</div><div style="font-size:20px;font-weight:900;margin-top:7px" id="accountName">Carlos Mendes</div></div>
-    <div class="card"><div class="eyebrow">Saldo fictício</div><div class="money cyan" id="accountBalance">R$ 12.450,00</div></div>
-  </div>
-  <div class="card"><div class="eyebrow">Movimentações fictícias</div><div id="accountTx"></div></div>
-</section>
 
-<!-- FATURA -->
-<section class="page" id="fatura">
-  <div class="notice">DADOS FICTÍCIOS — ESTA FATURA NÃO REPRESENTA UMA COBRANÇA REAL</div>
-  <div class="grid">
-    <div class="card"><div class="eyebrow">Valor total — fictício</div><div class="money pink" id="invoiceValue">R$ 1.890,00</div></div>
-    <div class="card"><div class="eyebrow">Vencimento — fictício</div><div class="money" style="font-size:24px" id="invoiceDue">15/10/2026</div></div>
-  </div>
-  <div class="card">
-    <div class="row"><span class="eyebrow">Limite demonstrativo</span><b id="invoiceLimit">R$ 8.000,00</b></div>
-    <div class="row"><span>Status</span><b class="gold">DEMONSTRAÇÃO</b></div>
-  </div>
-  <div class="card">
-    <div class="eyebrow">Editar fatura fictícia</div>
-    <div class="form" style="margin-top:16px">
-      <div class="field"><label>Valor da fatura (R$)</label><input class="input" id="editInvoice" type="number" min="0" step="0.01"></div>
-      <div class="field"><label>Data de vencimento</label><input class="input" id="editDue" type="date"></div>
-    </div>
-    <button class="btn primary" id="saveInvoice" style="margin-top:16px">Salvar fatura demonstrativa</button>
-  </div>
-  <div class="card"><div class="eyebrow">Compras fictícias</div><div id="purchases"></div></div>
-</section>
+    <!-- Script para ocultar/mostrar saldo ao clicar no olho -->
+    <script>
+        function toggleSaldo() {
+            const balanceValue = document.getElementById('balance-value');
+            const balanceHidden = document.getElementById('balance-hidden');
+            const eyeIcon = document.getElementById('toggle-eye');
 
-<!-- PIX -->
-<section class="page watermark" id="pix">
-  <div class="notice">PIX SIMULADO — NENHUM DINHEIRO SERÁ ENVIADO</div>
-  <div id="pixFormBox" class="card">
-    <div class="form">
-      <div class="field"><label>Destinatário fictício</label><input class="input" id="pixName" placeholder="Ex.: João Demo"></div>
-      <div class="field"><label>Chave fictícia</label><input class="input" id="pixKey" placeholder="Ex.: joao@demo.test"></div>
-      <div class="field"><label>Valor fictício (R$)</label><input class="input" id="pixValue" type="number" min="0.01" step="0.01" placeholder="250,00"></div>
-      <div class="field"><label>Descrição</label><input class="input" id="pixDesc" placeholder="Teste de simulação"></div>
-    </div>
-    <button class="btn primary" id="simulatePix" style="margin-top:18px">⚡ SIMULAR PIX</button>
-  </div>
-  <div id="pixConfirm" class="card" style="display:none">
-    <div class="notice">ESTA É UMA SIMULAÇÃO. NENHUM DINHEIRO SERÁ ENVIADO.</div>
-    <div class="row"><span>Destinatário</span><b id="confirmName">—</b></div>
-    <div class="row"><span>Chave</span><b id="confirmKey">—</b></div>
-    <div class="row"><span>Valor</span><b class="cyan" id="confirmValue">—</b></div>
-    <div class="row"><span>Descrição</span><b id="confirmDesc">—</b></div>
-    <div class="toolbar"><button class="btn outline" id="cancelPix">Cancelar</button><button class="btn primary" id="confirmPix">Confirmar simulação</button></div>
-  </div>
-  <div id="pixSuccess" class="card" style="display:none;text-align:center">
-    <div style="font-size:62px;color:var(--cyan)">✓</div>
-    <h2 style="color:var(--cyan)">SIMULAÇÃO CONCLUÍDA</h2>
-    <p style="font-weight:900">NENHUM DINHEIRO FOI ENVIADO.</p>
-    <button class="btn primary" id="viewReceipt">🧾 Ver comprovante fictício</button>
-    <button class="btn outline" id="newPix" style="margin-top:10px">Nova simulação</button>
-  </div>
-</section>
-
-<!-- HISTÓRICO -->
-<section class="page" id="historico">
-  <div class="notice">HISTÓRICO DE SIMULAÇÕES — SEM VALOR FINANCEIRO</div>
-  <div class="toolbar" style="margin:0 0 16px"><button class="btn danger" id="clearHistory">Limpar histórico</button><button class="btn outline" data-go="inicio">Voltar ao início</button></div>
-  <div id="historyList"></div>
-</section>
-
-<!-- COMPROVANTE -->
-<section class="page watermark" id="comprovante">
-  <div class="notice">COMPROVANTE FICTÍCIO — NÃO É COMPROVANTE DE PAGAMENTO</div>
-  <div class="receipt">
-    <div class="rh"><b>COMPROVANTE FICTÍCIO</b><div style="font-size:11px;margin-top:5px">PIX SIMULADO — SEM VALOR FINANCEIRO</div></div>
-    <div class="status">ESTE DOCUMENTO NÃO COMPROVA PAGAMENTO OU TRANSFERÊNCIA REAL.</div>
-    <div class="rbody">
-      <div class="rrow"><span>Remetente</span><b id="receiptSender">—</b></div>
-      <div class="rrow"><span>Destinatário</span><b id="receiptReceiver">—</b></div>
-      <div class="rrow"><span>Chave fictícia</span><b id="receiptKey">—</b></div>
-      <div class="rrow"><span>Valor</span><b id="receiptValue">—</b></div>
-      <div class="rrow"><span>Data e horário</span><b id="receiptDate">—</b></div>
-      <div class="rrow"><span>ID fictício</span><b id="receiptId">—</b></div>
-      <div class="rrow"><span>Descrição</span><b id="receiptDesc">—</b></div>
-      <div class="rrow"><span>Status</span><b style="color:#d91d54">SIMULAÇÃO</b></div>
-    </div>
-    <div class="rf">Banco Aurora Demo — BANCO FICTÍCIO<br>Este documento não possui valor financeiro ou legal.</div>
-  </div>
-  <button class="btn outline" id="printReceipt" style="margin-top:16px">🖨️ IMPRIMIR DEMONSTRAÇÃO</button>
-  <button class="btn primary" data-go="historico" style="margin-top:10px">Ver histórico</button>
-</section>
-</main>
-
-<div class="toast" id="toast"></div>
-
-<nav class="nav"><div class="navin">
-  <button data-go="inicio"><i>⌂</i>Início</button>
-  <button data-go="conta"><i>◉</i>Conta</button>
-  <button data-go="fatura"><i>▣</i>Fatura</button>
-  <button data-go="pix"><i>↗</i>Pix</button>
-  <button data-go="historico"><i>☷</i>Histórico</button>
-</div></nav>
-
-<script>
-"use strict";
-
-const DEFAULTS = {
-  name:"Carlos Mendes",
-  balance:12450,
-  invoice:1890,
-  due:"2026-10-15",
-  transactions:[
-    {desc:"Crédito demonstrativo",value:2500,type:"in"},
-    {desc:"Compra fictícia — Aurora Café",value:-89.90,type:"out"},
-    {desc:"Compra fictícia — Demo Store",value:-320,type:"out"},
-    {desc:"Depósito de teste",value:750,type:"in"}
-  ],
-  purchases:[
-    {desc:"Aurora Café — compra fictícia",value:89.90},
-    {desc:"Demo Store — compra fictícia",value:320},
-    {desc:"Streaming Demo — compra fictícia",value:49.90},
-    {desc:"Mercado Aurora — compra fictícia",value:1430.20}
-  ]
-};
-
-let state = loadState();
-let lastSimulation = null;
-
-function loadState(){
-  try{
-    const raw=localStorage.getItem("aurora_demo_data");
-    if(!raw) return structuredClone(DEFAULTS);
-    const saved=JSON.parse(raw);
-    return {...structuredClone(DEFAULTS),...saved,
-      transactions:Array.isArray(saved.transactions)?saved.transactions:structuredClone(DEFAULTS.transactions),
-      purchases:Array.isArray(saved.purchases)?saved.purchases:structuredClone(DEFAULTS.purchases)
-    };
-  }catch(e){ return structuredClone(DEFAULTS); }
-}
-function saveState(){localStorage.setItem("aurora_demo_data",JSON.stringify(state));}
-function money(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});}
-function dateBR(v){
-  if(!v)return "—";
-  const d=new Date(v+"T00:00:00");
-  return Number.isNaN(d.getTime())?v:d.toLocaleDateString("pt-BR");
-}
-function esc(v){
-  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-}
-function toast(msg){
-  const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");
-  clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.classList.remove("show"),2400);
-}
-function renderTransactions(target){
-  const el=document.getElementById(target);
-  if(!state.transactions.length){el.innerHTML='<div class="empty">Nenhuma movimentação fictícia.</div>';return}
-  el.innerHTML=state.transactions.map(t=>`
-    <div class="tx">
-      <div class="txicon">${t.type==="in"?"↓":"↑"}</div>
-      <div class="txmain"><b>${esc(t.desc)}</b><small>Movimentação fictícia</small></div>
-      <b class="${t.value>=0?"cyan":"pink"}">${t.value>=0?"+":"−"} ${money(Math.abs(t.value))}</b>
-    </div>`).join("");
-}
-function render(){
-  document.getElementById("homeName").textContent=state.name;
-  document.getElementById("homeBalance").textContent=money(state.balance);
-  document.getElementById("homeInvoice").textContent=money(state.invoice);
-  document.getElementById("homeDue").textContent=dateBR(state.due);
-  document.getElementById("accountName").textContent=state.name;
-  document.getElementById("accountBalance").textContent=money(state.balance);
-  document.getElementById("editName").value=state.name;
-  document.getElementById("editBalance").value=state.balance;
-  document.getElementById("invoiceValue").textContent=money(state.invoice);
-  document.getElementById("invoiceDue").textContent=dateBR(state.due);
-  document.getElementById("editInvoice").value=state.invoice;
-  document.getElementById("editDue").value=state.due;
-  document.getElementById("invoiceLimit").textContent=money(8000);
-  renderTransactions("homeTx");renderTransactions("accountTx");
-  document.getElementById("purchases").innerHTML=state.purchases.map(p=>`
-    <div class="row"><span>${esc(p.desc)}</span><b>${money(p.value)}</b></div>`).join("");
-  renderHistory();
-}
-function renderHistory(){
-  const el=document.getElementById("historyList");
-  let arr=[];try{arr=JSON.parse(localStorage.getItem("aurora_demo_history")||"[]")}catch(e){}
-  if(!arr.length){el.innerHTML='<div class="card empty">Nenhuma simulação realizada ainda.<br>Faça um Pix Simulado para aparecer aqui.</div>';return}
-  el.innerHTML=arr.map((x,i)=>`
-    <div class="card">
-      <div class="row"><div><b>PIX SIMULADO</b><div class="help">${esc(x.receiver)}</div></div><b class="cyan">${money(x.value)}</b></div>
-      <div class="row"><span class="eyebrow">Status</span><b class="gold">SIMULAÇÃO</b></div>
-      <div class="row"><span>Data/hora</span><b>${esc(x.date)}</b></div>
-      <div class="row"><span>ID fictício</span><b>${esc(x.id)}</b></div>
-      <button class="btn outline" data-history-index="${i}">Visualizar detalhes</button>
-    </div>`).join("");
-}
-  
+            if (balanceValue.style.display === 'none') {
+                balanceValue.style.display = 'block';
+                balanceHidden.style.display = 'none';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            } else {
+                balanceValue.style.display = 'none';
+                balanceHidden.style.display = 'block';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            }
+        }
+    </script>
+</body>
+</html>
