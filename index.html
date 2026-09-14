@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interface Nubank Interativa</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Interface Nubank</title>
     <style>
         * {
             margin: 0;
@@ -14,67 +13,76 @@
         }
 
         body {
-            background-color: #e5e5e5;
+            background-color: #222;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
 
-        /* Classe utilitária para esconder elementos */
         .hidden {
             display: none !important;
         }
 
         .app-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             background-color: #f5f5f7;
-            min-height: 100vh;
+            height: 100vh;
+            max-height: 840px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             position: relative;
-            overflow-x: hidden;
+            border-radius: 20px;
+            overflow: hidden;
         }
 
         /* Header */
         .header {
             background-color: #820AD1;
             color: white;
-            padding: 28px 20px 20px 20px;
+            padding: 24px 20px 20px 20px;
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .user-profile {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
             cursor: pointer;
         }
 
         .header-icons {
             display: flex;
-            gap: 16px;
-            font-size: 1.2rem;
+            gap: 12px;
         }
 
-        .header-icons i {
+        .icon-btn {
+            background: none;
+            border: none;
+            color: white;
             cursor: pointer;
-            padding: 8px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         .user-greeting {
@@ -82,37 +90,31 @@
             font-weight: 600;
         }
 
-        /* Campos Editáveis */
         .editable-field {
             outline: none;
             border-radius: 4px;
             padding: 2px 4px;
-            transition: background 0.2s;
+            display: inline-block;
         }
 
-        .editable-field:hover, .editable-field:focus {
-            background-color: #f0e6ff;
-            color: #111;
-        }
-
-        .header .editable-field:hover, .header .editable-field:focus {
-            background-color: rgba(255,255,255,0.2);
-            color: #fff;
+        .editable-field:focus {
+            background-color: rgba(255,255,255,0.25);
         }
 
         /* Content */
         .content {
             padding: 16px 20px;
             flex: 1;
+            overflow-y: auto;
             padding-bottom: 80px;
         }
 
         .card {
             background-color: #ffffff;
             border-radius: 16px;
-            padding: 20px;
+            padding: 18px;
             margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
 
         .card-header {
@@ -121,72 +123,62 @@
             align-items: center;
             color: #111;
             font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
+            font-size: 1rem;
+            margin-bottom: 10px;
         }
 
         .balance-amount {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: #111;
         }
 
         .balance-hidden {
-            width: 140px;
+            width: 120px;
             height: 24px;
             background-color: #e2e2e8;
             border-radius: 4px;
         }
 
-        /* Botões Rápidos */
+        /* Quick Actions */
         .quick-actions {
             display: flex;
             gap: 12px;
             overflow-x: auto;
-            padding-bottom: 12px;
+            padding-bottom: 8px;
             margin-bottom: 16px;
-            scrollbar-width: none;
-        }
-
-        .quick-actions::-webkit-scrollbar {
-            display: none;
         }
 
         .action-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 72px;
+            min-width: 70px;
             cursor: pointer;
-            user-select: none;
+            border: none;
+            background: none;
         }
 
         .action-icon {
-            width: 64px;
-            height: 64px;
+            width: 60px;
+            height: 60px;
             background-color: #efeff4;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            color: #111;
-            margin-bottom: 8px;
-            transition: background 0.2s;
-        }
-
-        .action-item:hover .action-icon {
-            background-color: #e2e2e8;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #820AD1;
         }
 
         .action-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: #111;
-            text-align: center;
         }
 
-        /* Cartão Virtual Button */
+        /* Cartão Virtual */
         .my-cards {
             background-color: #efeff4;
             border-radius: 12px;
@@ -199,28 +191,22 @@
             color: #111;
             margin-bottom: 16px;
             cursor: pointer;
-            user-select: none;
-        }
-
-        .my-cards-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            border: none;
+            width: 100%;
         }
 
         /* Extrato */
         .section-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: #111;
-            margin: 20px 0 12px 0;
+            margin: 16px 0 10px 0;
         }
 
         .transaction-list {
             background-color: white;
             border-radius: 16px;
-            padding: 12px 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            padding: 8px 16px;
         }
 
         .transaction-item {
@@ -235,25 +221,8 @@
             border-bottom: none;
         }
 
-        .transaction-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .transaction-icon {
-            width: 40px;
-            height: 40px;
-            background-color: #f5f5f7;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #820AD1;
-        }
-
         .transaction-details p {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: #111;
         }
@@ -264,7 +233,7 @@
         }
 
         .transaction-value {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
         }
 
@@ -273,7 +242,7 @@
 
         /* Modais */
         .modal-overlay {
-            position: fixed;
+            position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.6);
             display: flex;
@@ -284,71 +253,62 @@
 
         .modal-card {
             background-color: white;
-            width: 90%;
-            max-width: 360px;
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 85%;
+            border-radius: 16px;
+            padding: 20px;
             position: relative;
         }
 
         .modal-close {
             position: absolute;
-            top: 16px;
-            right: 16px;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
             font-size: 1.2rem;
             cursor: pointer;
             color: #666;
         }
 
-        /* Cartão Virtual Visual */
         .virtual-card-box {
             background: linear-gradient(135deg, #820AD1 0%, #4D067A 100%);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 16px;
             color: white;
-            margin: 16px 0;
-            box-shadow: 0 8px 16px rgba(130, 10, 209, 0.3);
-        }
-
-        .vc-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
+            margin: 12px 0;
         }
 
         .vc-number {
-            font-size: 1.1rem;
+            font-size: 1rem;
             letter-spacing: 2px;
-            margin-bottom: 20px;
+            margin: 16px 0;
             font-family: monospace;
         }
 
         .vc-bottom {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
-        /* Formulário do Modal */
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+            text-align: left;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #666;
             margin-bottom: 4px;
         }
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
         }
 
         .btn-submit {
@@ -356,31 +316,12 @@
             background-color: #820AD1;
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 25px;
+            padding: 10px;
+            border-radius: 20px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 8px;
         }
-
-        .bottom-nav {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            border-top: 1px solid #e2e2e8;
-        }
-
-        .nav-item {
-            color: #666;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-
-        .nav-item.active { color: #820AD1; }
     </style>
 </head>
 <body>
@@ -390,15 +331,12 @@
         <header class="header">
             <div class="header-top">
                 <div class="user-profile">
-                    <i class="fa-solid fa-user"></i>
+                    👤
                 </div>
                 <div class="header-icons">
-                    <i class="fa-regular fa-eye" id="toggle-eye"></i>
-                    <i class="fa-regular fa-circle-question"></i>
-                    <i class="fa-regular fa-envelope"></i>
+                    <button class="icon-btn" id="toggle-eye" title="Ocultar/Mostrar Saldo">👁️</button>
                 </div>
             </div>
-            <!-- Clique no nome para editar -->
             <div class="user-greeting">
                 Olá, <span contenteditable="true" class="editable-field" id="user-name">Usuário</span>
             </div>
@@ -410,7 +348,7 @@
             <div class="card">
                 <div class="card-header">
                     <span>Conta</span>
-                    <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; color: #666;"></i>
+                    <span>></span>
                 </div>
                 <div class="balance-amount" id="balance-value">
                     R$ <span contenteditable="true" class="editable-field" id="raw-balance">1.250,40</span>
@@ -420,186 +358,198 @@
 
             <!-- Botões Rápido -->
             <div class="quick-actions">
-                <div class="action-item" id="btn-pix">
-                    <div class="action-icon"><i class="fa-brands fa-pix"></i></div>
+                <button class="action-item" id="btn-pix">
+                    <div class="action-icon">❖</div>
                     <span class="action-label">Pix</span>
-                </div>
-                <div class="action-item">
-                    <div class="action-icon"><i class="fa-solid fa-barcode"></i></div>
+                </button>
+                <button class="action-item">
+                    <div class="action-icon">║▌</div>
                     <span class="action-label">Pagar</span>
-                </div>
-                <div class="action-item">
-                    <div class="action-icon"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                </button>
+                <button class="action-item">
+                    <div class="action-icon">⇄</div>
                     <span class="action-label">Transferir</span>
-                </div>
-                <div class="action-item">
-                    <div class="action-icon"><i class="fa-solid fa-piggy-bank"></i></div>
-                    <span class="action-label">Depositar</span>
-                </div>
+                </button>
             </div>
 
             <!-- Botão Cartão Virtual -->
-            <div class="my-cards" id="btn-card">
-                <div class="my-cards-left">
-                    <i class="fa-solid fa-credit-card" style="color: #820AD1;"></i>
+            <button class="my-cards" id="btn-card">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <span style="color:#820AD1;">💳</span>
                     <span>Cartão Virtual</span>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; color: #666;"></i>
-            </div>
+                <span>></span>
+            </button>
 
             <!-- Fatura Cartão -->
             <div class="card">
                 <div class="card-header">
                     <span>Cartão de crédito</span>
-                    <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; color: #666;"></i>
+                    <span>></span>
                 </div>
-                <p style="font-size: 0.85rem; color: #666; margin-bottom: 4px;">Fatura atual</p>
+                <p style="font-size: 0.8rem; color: #666; margin-bottom: 4px;">Fatura atual</p>
                 <div class="balance-amount" style="color: #00875a;">
                     R$ <span contenteditable="true" class="editable-field">380,20</span>
                 </div>
-                <p style="font-size: 0.8rem; color: #666; margin-top: 6px;">
-                    Limite disponível: R$ <span contenteditable="true" class="editable-field">2.120,00</span>
-                </p>
             </div>
 
             <!-- Extrato -->
             <h3 class="section-title">Histórico de Transações</h3>
             <div class="transaction-list" id="transaction-list">
                 <div class="transaction-item">
-                    <div class="transaction-info">
-                        <div class="transaction-icon"><i class="fa-solid fa-cart-shopping"></i></div>
-                        <div class="transaction-details">
-                            <p contenteditable="true" class="editable-field">Supermercado Modelo</p>
-                            <span>Hoje • Débito</span>
-                        </div>
+                    <div class="transaction-details">
+                        <p contenteditable="true" class="editable-field">Supermercado Modelo</p>
+                        <span>Hoje • Débito</span>
                     </div>
                     <span class="transaction-value value-negative">- R$ 145,90</span>
                 </div>
             </div>
         </main>
 
-        <!-- Barra Inferior -->
-        <nav class="bottom-nav">
-            <div class="nav-item active"><i class="fa-solid fa-arrows-up-down"></i></div>
-            <div class="nav-item"><i class="fa-solid fa-dollar-sign"></i></div>
-            <div class="nav-item"><i class="fa-solid fa-bag-shopping"></i></div>
-        </nav>
-    </div>
+        <!-- MODAL CARTÃO VIRTUAL -->
+        <div class="modal-overlay hidden" id="card-modal">
+            <div class="modal-card">
+                <button class="modal-close" id="btn-close-card">✕</button>
+                <h3 style="font-size: 1rem; color: #111;">Cartão Virtual</h3>
+                <p style="font-size: 0.7rem; color: #666;">Clique para editar os valores:</p>
 
-    <!-- MODAL CARTÃO VIRTUAL -->
-    <div class="modal-overlay hidden" id="card-modal">
-        <div class="modal-card">
-            <i class="fa-solid fa-xmark modal-close" id="btn-close-card"></i>
-            <h3 style="font-size: 1.1rem; color: #111;">Seu Cartão Virtual</h3>
-            <p style="font-size: 0.75rem; color: #666; margin-top: 4px;">Clique nos dados para editá-los livremente.</p>
-
-            <div class="virtual-card-box">
-                <div class="vc-top">
-                    <i class="fa-solid fa-bolt" style="font-size: 1.2rem;"></i>
-                    <span style="font-weight: bold; font-style: italic;">mastercard</span>
-                </div>
-                <div class="vc-number">
-                    <span contenteditable="true" class="editable-field">5502 8412 9031 4481</span>
-                </div>
-                <div class="vc-bottom">
-                    <div>
-                        <div style="font-size: 0.65rem; opacity: 0.8;">TITULAR</div>
-                        <div contenteditable="true" class="editable-field" id="card-holder-name">USUÁRIO</div>
+                <div class="virtual-card-box">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>⚡ Virtual</span>
+                        <span style="font-weight: bold;">Mastercard</span>
                     </div>
-                    <div>
-                        <div style="font-size: 0.65rem; opacity: 0.8;">VALIDADE</div>
-                        <div contenteditable="true" class="editable-field">08/29</div>
+                    <div class="vc-number">
+                        <span contenteditable="true" class="editable-field">5502 8412 9031 4481</span>
                     </div>
-                    <div>
-                        <div style="font-size: 0.65rem; opacity: 0.8;">CVC</div>
-                        <div contenteditable="true" class="editable-field">492</div>
+                    <div class="vc-bottom">
+                        <div>
+                            <div style="opacity: 0.7; font-size: 0.6rem;">TITULAR</div>
+                            <div contenteditable="true" class="editable-field" id="card-holder-name">USUÁRIO</div>
+                        </div>
+                        <div>
+                            <div style="opacity: 0.7; font-size: 0.6rem;">VAL.</div>
+                            <div contenteditable="true" class="editable-field">08/29</div>
+                        </div>
+                        <div>
+                            <div style="opacity: 0.7; font-size: 0.6rem;">CVC</div>
+                            <div contenteditable="true" class="editable-field">492</div>
+                        </div>
                     </div>
                 </div>
+                <button class="btn-submit" id="btn-done-card">Fechar</button>
             </div>
-            <button class="btn-submit" id="btn-done-card">Concluído</button>
+        </div>
+
+        <!-- MODAL PIX -->
+        <div class="modal-overlay hidden" id="pix-modal">
+            <div class="modal-card">
+                <button class="modal-close" id="btn-close-pix">✕</button>
+                <h3 style="font-size: 1rem; color: #111; margin-bottom: 10px;">Fazer / Receber Pix</h3>
+                
+                <div class="form-group">
+                    <label for="pix-type">Operação</label>
+                    <select id="pix-type">
+                        <option value="send">Enviar Pix (Saída)</option>
+                        <option value="receive">Receber Pix (Entrada)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pix-name">Nome da Pessoa / Empresa</label>
+                    <input type="text" id="pix-name" placeholder="Ex: João da Silva">
+                </div>
+                <div class="form-group">
+                    <label for="pix-amount">Valor (R$)</label>
+                    <input type="number" id="pix-amount" placeholder="50.00">
+                </div>
+
+                <button class="btn-submit" id="btn-confirm-pix">Confirmar Pix</button>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL PIX -->
-    <div class="modal-overlay hidden" id="pix-modal">
-        <div class="modal-card">
-            <i class="fa-solid fa-xmark modal-close" id="btn-close-pix"></i>
-            <h3 style="font-size: 1.1rem; color: #111; margin-bottom: 12px;">Área Pix</h3>
-            
-            <div class="form-group">
-                <label for="pix-type">Tipo de Operação</label>
-                <select id="pix-type">
-                    <option value="send">Enviar Pix (Saída)</option>
-                    <option value="receive">Receber Pix (Entrada)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="pix-name">Nome da Pessoa / Empresa</label>
-                <input type="text" id="pix-name" placeholder="Ex: João da Silva">
-            </div>
-            <div class="form-group">
-                <label for="pix-amount">Valor (R$)</label>
-                <input type="number" id="pix-amount" placeholder="0.00" step="0.01">
-            </div>
-
-            <button class="btn-submit" id="btn-confirm-pix">Confirmar Pix</button>
-        </div>
-    </div>
-
-    <!-- SCRIPT DE INTERAÇÕES E EVENTOS -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Elementos
-            const toggleEye = document.getElementById('toggle-eye');
-            const balanceValue = document.getElementById('balance-value');
-            const balanceHidden = document.getElementById('balance-hidden');
+        // Executa o script apenas após o carregamento da tela
+        window.onload = function() {
+            var toggleEye = document.getElementById('toggle-eye');
+            var balanceValue = document.getElementById('balance-value');
+            var balanceHidden = document.getElementById('balance-hidden');
 
-            const btnPix = document.getElementById('btn-pix');
-            const pixModal = document.getElementById('pix-modal');
-            const btnClosePix = document.getElementById('btn-close-pix');
-            const btnConfirmPix = document.getElementById('btn-confirm-pix');
+            var btnPix = document.getElementById('btn-pix');
+            var pixModal = document.getElementById('pix-modal');
+            var btnClosePix = document.getElementById('btn-close-pix');
+            var btnConfirmPix = document.getElementById('btn-confirm-pix');
 
-            const btnCard = document.getElementById('btn-card');
-            const cardModal = document.getElementById('card-modal');
-            const btnCloseCard = document.getElementById('btn-close-card');
-            const btnDoneCard = document.getElementById('btn-done-card');
+            var btnCard = document.getElementById('btn-card');
+            var cardModal = document.getElementById('card-modal');
+            var btnCloseCard = document.getElementById('btn-close-card');
+            var btnDoneCard = document.getElementById('btn-done-card');
 
-            // 1. Mostrar/Ocultar Saldo
-            let isBalanceVisible = true;
-            toggleEye.addEventListener('click', () => {
-                isBalanceVisible = !isBalanceVisible;
-                if (isBalanceVisible) {
+            // Toggle Saldo
+            toggleEye.onclick = function() {
+                if (balanceValue.classList.contains('hidden')) {
                     balanceValue.classList.remove('hidden');
                     balanceHidden.classList.add('hidden');
-                    toggleEye.classList.remove('fa-eye-slash');
-                    toggleEye.classList.add('fa-eye');
                 } else {
                     balanceValue.classList.add('hidden');
                     balanceHidden.classList.remove('hidden');
-                    toggleEye.classList.remove('fa-eye');
-                    toggleEye.classList.add('fa-eye-slash');
                 }
-            });
+            };
 
-            // 2. Modal Cartão Virtual
-            btnCard.addEventListener('click', () => {
-                const userName = document.getElementById('user-name').innerText.trim();
-                document.getElementById('card-holder-name').innerText = userName.toUpperCase() || 'TITULAR';
+            // Modal Cartão
+            btnCard.onclick = function() {
+                var name = document.getElementById('user-name').innerText;
+                document.getElementById('card-holder-name').innerText = name.toUpperCase();
                 cardModal.classList.remove('hidden');
-            });
+            };
+            btnCloseCard.onclick = function() { cardModal.classList.add('hidden'); };
+            btnDoneCard.onclick = function() { cardModal.classList.add('hidden'); };
 
-            btnCloseCard.addEventListener('click', () => cardModal.classList.add('hidden'));
-            btnDoneCard.addEventListener('click', () => cardModal.classList.add('hidden'));
+            // Modal Pix
+            btnPix.onclick = function() { pixModal.classList.remove('hidden'); };
+            btnClosePix.onclick = function() { pixModal.classList.add('hidden'); };
 
-            // 3. Modal Pix
-            btnPix.addEventListener('click', () => {
-                pixModal.classList.remove('hidden');
-            });
+            // Executar Pix
+            btnConfirmPix.onclick = function() {
+                var type = document.getElementById('pix-type').value;
+                var name = document.getElementById('pix-name').value || 'Pix';
+                var amount = parseFloat(document.getElementById('pix-amount').value);
 
-            btnClosePix.addEventListener('click', () => pixModal.classList.add('hidden'));
+                if (isNaN(amount) || amount <= 0) {
+                    alert('Digite um valor válido!');
+                    return;
+                }
 
-            // 4. Executar Pix e Atualizar Saldo
-            btnConfirmPix.addEventListener('click', () => {
-                const type = document.getElementById('pix-type').value;
-                const name = document.getElementById('pix-name').value.trim() || 'Transação Pix';
-                const 
+                var rawBalanceElem = document.getElementById('raw-balance');
+                var currentVal = parseFloat(rawBalanceElem.innerText.replace('.', '').replace(',', '.'));
+                if (isNaN(currentVal)) currentVal = 0;
+
+                var isReceive = (type === 'receive');
+                var newVal = isReceive ? (currentVal + amount) : (currentVal - amount);
+                
+                rawBalanceElem.innerText = newVal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+                // Extrato
+                var transactionList = document.getElementById('transaction-list');
+                var newItem = document.createElement('div');
+                newItem.className = 'transaction-item';
+                var sign = isReceive ? '+ R$' : '- R$';
+                var valClass = isReceive ? 'value-positive' : 'value-negative';
+
+                newItem.innerHTML = `
+                    <div class="transaction-details">
+                        <p contenteditable="true" class="editable-field">${isReceive ? 'Pix recebido - ' : 'Pix enviado - '}${name}</p>
+                        <span>Agora • Pix</span>
+                    </div>
+                    <span class="transaction-value ${valClass}">${sign} ${amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                `;
+
+                transactionList.insertBefore(newItem, transactionList.firstChild);
+
+                document.getElementById('pix-name').value = '';
+                document.getElementById('pix-amount').value = '';
+                pixModal.classList.add('hidden');
+            };
+        };
+    </script>
+</body>
+</html>
