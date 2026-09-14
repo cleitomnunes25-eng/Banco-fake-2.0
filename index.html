@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interface Nubank</title>
-    <!-- Ícones do Font Awesome -->
+    <title>Interface Nubank Interativa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -22,7 +21,6 @@
             min-height: 100vh;
         }
 
-        /* Moldura simulando a tela de celular */
         .app-container {
             width: 100%;
             max-width: 420px;
@@ -35,7 +33,7 @@
             overflow-x: hidden;
         }
 
-        /* Cabeçalho Roxo */
+        /* Header */
         .header {
             background-color: #820AD1;
             color: white;
@@ -74,35 +72,30 @@
             transition: background 0.2s;
         }
 
-        .header-icons i:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-
         .user-greeting {
             font-size: 1.1rem;
             font-weight: 600;
+            outline: none;
+            border-bottom: 1px dashed transparent;
         }
 
-        /* Conteúdo Principal */
+        .user-greeting:hover {
+            border-bottom-color: rgba(255,255,255,0.5);
+        }
+
+        /* Content */
         .content {
             padding: 16px 20px;
             flex: 1;
             padding-bottom: 80px;
         }
 
-        /* Card Saldo e Fatura */
         .card {
             background-color: #ffffff;
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 16px;
-            cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            transition: transform 0.1s ease;
-        }
-
-        .card:active {
-            transform: scale(0.99);
         }
 
         .card-header {
@@ -113,6 +106,17 @@
             font-weight: 600;
             font-size: 1.1rem;
             margin-bottom: 12px;
+        }
+
+        .editable-field {
+            outline: none;
+            border-radius: 4px;
+            padding: 2px 4px;
+            transition: background 0.2s;
+        }
+
+        .editable-field:hover, .editable-field:focus {
+            background-color: #f0e6ff;
         }
 
         .balance-amount {
@@ -128,7 +132,7 @@
             border-radius: 4px;
         }
 
-        /* Carrossel de Ações Rápidas */
+        /* Quick Actions */
         .quick-actions {
             display: flex;
             gap: 12px;
@@ -175,14 +179,13 @@
             text-align: center;
         }
 
-        /* Botão Meus Cartões */
         .my-cards {
             background-color: #efeff4;
             border-radius: 12px;
             padding: 14px 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
             font-size: 0.9rem;
             font-weight: 600;
             color: #111;
@@ -190,7 +193,13 @@
             cursor: pointer;
         }
 
-        /* Títulos de Seção */
+        .my-cards-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Section Title & Transactions */
         .section-title {
             font-size: 1rem;
             font-weight: 700;
@@ -198,7 +207,6 @@
             margin: 20px 0 12px 0;
         }
 
-        /* Lista de Extrato */
         .transaction-list {
             background-color: white;
             border-radius: 16px;
@@ -251,21 +259,106 @@
             font-weight: 700;
         }
 
-        .value-positive {
-            color: #00875a;
+        .value-positive { color: #00875a; }
+        .value-negative { color: #111; }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
 
-        .value-negative {
-            color: #111;
+        .modal-card {
+            background-color: white;
+            width: 90%;
+            max-width: 360px;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
         }
 
-        /* Barra de Navegação Inferior */
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Dynamic Virtual Card Styling */
+        .virtual-card-box {
+            background: linear-gradient(135deg, #820AD1 0%, #4D067A 100%);
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            margin: 16px 0;
+            box-shadow: 0 8px 16px rgba(130, 10, 209, 0.3);
+        }
+
+        .vc-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .vc-number {
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+
+        .vc-bottom {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+        }
+
+        /* Modal Input Form */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #820AD1;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
         .bottom-nav {
             position: absolute;
             bottom: 0;
             width: 100%;
             background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
             display: flex;
             justify-content: space-around;
             padding: 12px 0;
@@ -273,23 +366,18 @@
         }
 
         .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             color: #666;
-            cursor: pointer;
             font-size: 1.1rem;
+            cursor: pointer;
         }
 
-        .nav-item.active {
-            color: #820AD1;
-        }
+        .nav-item.active { color: #820AD1; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <!-- Cabeçalho -->
+        <!-- Header -->
         <header class="header">
             <div class="header-top">
                 <div class="user-profile">
@@ -301,26 +389,29 @@
                     <i class="fa-regular fa-envelope"></i>
                 </div>
             </div>
+            <!-- Clique para editar o nome -->
             <div class="user-greeting">
-                Olá, Usuário
+                Olá, <span contenteditable="true" class="editable-field" id="user-name">Usuário</span>
             </div>
         </header>
 
-        <!-- Conteúdo Principal -->
+        <!-- Main Content -->
         <main class="content">
-            <!-- Conta / Saldo -->
+            <!-- Saldo -->
             <div class="card">
                 <div class="card-header">
                     <span>Conta</span>
                     <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; color: #666;"></i>
                 </div>
-                <div class="balance-amount" id="balance-value">R$ 1.250,40</div>
+                <div class="balance-amount" id="balance-value">
+                    R$ <span contenteditable="true" class="editable-field" id="raw-balance">1250.40</span>
+                </div>
                 <div class="balance-hidden" id="balance-hidden" style="display: none;"></div>
             </div>
 
-            <!-- Botões de Ação Rápida -->
+            <!-- Botões Rápido -->
             <div class="quick-actions">
-                <div class="action-item">
+                <div class="action-item" onclick="openPixModal()">
                     <div class="action-icon"><i class="fa-brands fa-pix"></i></div>
                     <span class="action-label">Pix</span>
                 </div>
@@ -336,72 +427,49 @@
                     <div class="action-icon"><i class="fa-solid fa-piggy-bank"></i></div>
                     <span class="action-label">Depositar</span>
                 </div>
-                <div class="action-item">
-                    <div class="action-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
-                    <span class="action-label">Recarga</span>
-                </div>
-                <div class="action-item">
-                    <div class="action-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-                    <span class="action-label">Cobrar</span>
-                </div>
             </div>
 
-            <!-- Botão Meus Cartões -->
-            <div class="my-cards">
-                <i class="fa-solid fa-credit-card"></i>
-                <span>Meus cartões</span>
+            <!-- Botão Cartão Virtual -->
+            <div class="my-cards" onclick="openCardModal()">
+                <div class="my-cards-left">
+                    <i class="fa-solid fa-credit-card" style="color: #820AD1;"></i>
+                    <span>Cartão Virtual</span>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; color: #666;"></i>
             </div>
 
-            <!-- Card Cartão de Crédito -->
+            <!-- Fatura Cartão -->
             <div class="card">
                 <div class="card-header">
                     <span>Cartão de crédito</span>
                     <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; color: #666;"></i>
                 </div>
                 <p style="font-size: 0.85rem; color: #666; margin-bottom: 4px;">Fatura atual</p>
-                <div class="balance-amount" style="color: #00875a;">R$ 380,20</div>
-                <p style="font-size: 0.8rem; color: #666; margin-top: 6px;">Limite disponível: R$ 2.120,00</p>
+                <div class="balance-amount" style="color: #00875a;">
+                    R$ <span contenteditable="true" class="editable-field">380.20</span>
+                </div>
+                <p style="font-size: 0.8rem; color: #666; margin-top: 6px;">
+                    Limite disponível: R$ <span contenteditable="true" class="editable-field">2120.00</span>
+                </p>
             </div>
 
-            <!-- Extrato de Transações -->
+            <!-- Extrato -->
             <h3 class="section-title">Histórico de Transações</h3>
-            <div class="transaction-list">
+            <div class="transaction-list" id="transaction-list">
                 <div class="transaction-item">
                     <div class="transaction-info">
                         <div class="transaction-icon"><i class="fa-solid fa-cart-shopping"></i></div>
                         <div class="transaction-details">
-                            <p>Supermercado Modelo</p>
-                            <span>Hoje, 14:20 • Cartão de débito</span>
+                            <p contenteditable="true" class="editable-field">Supermercado Modelo</p>
+                            <span>Hoje • Débito</span>
                         </div>
                     </div>
                     <span class="transaction-value value-negative">- R$ 145,90</span>
                 </div>
-
-                <div class="transaction-item">
-                    <div class="transaction-info">
-                        <div class="transaction-icon"><i class="fa-brands fa-pix"></i></div>
-                        <div class="transaction-details">
-                            <p>Pix recebido - Maria Silva</p>
-                            <span>Ontem, 09:15 • Transferência</span>
-                        </div>
-                    </div>
-                    <span class="transaction-value value-positive">+ R$ 200,00</span>
-                </div>
-
-                <div class="transaction-item">
-                    <div class="transaction-info">
-                        <div class="transaction-icon"><i class="fa-solid fa-mug-hot"></i></div>
-                        <div class="transaction-details">
-                            <p>Café & Cia</p>
-                            <span>12 Set • Cartão de débito</span>
-                        </div>
-                    </div>
-                    <span class="transaction-value value-negative">- R$ 18,50</span>
-                </div>
             </div>
         </main>
 
-        <!-- Navegação Inferior -->
+        <!-- Barra Inferior -->
         <nav class="bottom-nav">
             <div class="nav-item active"><i class="fa-solid fa-arrows-up-down"></i></div>
             <div class="nav-item"><i class="fa-solid fa-dollar-sign"></i></div>
@@ -409,8 +477,68 @@
         </nav>
     </div>
 
-    <!-- Script para ocultar/mostrar saldo ao clicar no olho -->
+    <!-- MODAL CARTÃO VIRTUAL -->
+    <div class="modal-overlay" id="card-modal">
+        <div class="modal-card">
+            <i class="fa-solid fa-xmark modal-close" onclick="closeCardModal()"></i>
+            <h3 style="font-size: 1.1rem; color: #111;">Seu Cartão Virtual</h3>
+            <p style="font-size: 0.75rem; color: #666; margin-top: 4px;">Clique nos dados para editá-los livremente.</p>
+
+            <div class="virtual-card-box">
+                <div class="vc-top">
+                    <i class="fa-solid fa-bolt" style="font-size: 1.2rem;"></i>
+                    <span style="font-weight: bold; font-style: italic;">mastercard</span>
+                </div>
+                <div class="vc-number">
+                    <span contenteditable="true" class="editable-field">5502 8412 9031 4481</span>
+                </div>
+                <div class="vc-bottom">
+                    <div>
+                        <div style="font-size: 0.65rem; opacity: 0.8;">TITULAR</div>
+                        <div contenteditable="true" class="editable-field" id="card-holder-name">NOME DO TITULAR</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.65rem; opacity: 0.8;">VALIDADE</div>
+                        <div contenteditable="true" class="editable-field">08/29</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.65rem; opacity: 0.8;">CVC</div>
+                        <div contenteditable="true" class="editable-field">492</div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-submit" onclick="closeCardModal()">Concluído</button>
+        </div>
+    </div>
+
+    <!-- MODAL PIX (FAZER PIX) -->
+    <div class="modal-overlay" id="pix-modal">
+        <div class="modal-card">
+            <i class="fa-solid fa-xmark modal-close" onclick="closePixModal()"></i>
+            <h3 style="font-size: 1.1rem; color: #111; margin-bottom: 12px;">Área Pix</h3>
+            
+            <div class="form-group">
+                <label>Tipo de Operação</label>
+                <select id="pix-type">
+                    <option value="send">Enviar Pix (Saída)</option>
+                    <option value="receive">Receber Pix (Entrada)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Nome da Pessoa / Empresa</label>
+                <input type="text" id="pix-name" placeholder="Ex: João da Silva">
+            </div>
+            <div class="form-group">
+                <label>Valor (R$)</label>
+                <input type="number" id="pix-amount" placeholder="0.00" step="0.01">
+            </div>
+
+            <button class="btn-submit" onclick="executePix()">Confirmar Pix</button>
+        </div>
+    </div>
+
     <script>
+        // Alternar visibilidade do saldo
         function toggleSaldo() {
             const balanceValue = document.getElementById('balance-value');
             const balanceHidden = document.getElementById('balance-hidden');
@@ -419,15 +547,61 @@
             if (balanceValue.style.display === 'none') {
                 balanceValue.style.display = 'block';
                 balanceHidden.style.display = 'none';
-                eyeIcon.classList.remove('fa-eye-slash');
-                eyeIcon.classList.add('fa-eye');
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
             } else {
                 balanceValue.style.display = 'none';
                 balanceHidden.style.display = 'block';
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
             }
         }
-    </script>
-</body>
-</html>
+
+        // Modais do Cartão Virtual
+        function openCardModal() {
+            const currentName = document.getElementById('user-name').innerText;
+            document.getElementById('card-holder-name').innerText = currentName.toUpperCase();
+            document.getElementById('card-modal').style.display = 'flex';
+        }
+        function closeCardModal() {
+            document.getElementById('card-modal').style.display = 'none';
+        }
+
+        // Modais do Pix
+        function openPixModal() {
+            document.getElementById('pix-modal').style.display = 'flex';
+        }
+        function closePixModal() {
+            document.getElementById('pix-modal').style.display = 'none';
+        }
+
+        // Executar e Simular Pix
+        function executePix() {
+            const type = document.getElementById('pix-type').value;
+            const name = document.getElementById('pix-name').value || 'Transação Pix';
+            const amount = parseFloat(document.getElementById('pix-amount').value);
+
+            if (isNaN(amount) || amount <= 0) {
+                alert('Digite um valor válido!');
+                return;
+            }
+
+            const rawBalanceElem = document.getElementById('raw-balance');
+            let currentBalance = parseFloat(rawBalanceElem.innerText.replace(',', '.'));
+
+            let isPositive = type === 'receive';
+            let newBalance = isPositive ? (currentBalance + amount) : (currentBalance - amount);
+            rawBalanceElem.innerText = newBalance.toFixed(2);
+
+            // Adicionar ao extrato
+            const transactionList = document.getElementById('transaction-list');
+            const newItem = document.createElement('div');
+            newItem.className = 'transaction-item';
+            
+            const formattedVal = amount.toFixed(2).replace('.', ',');
+            const sign = isPositive ? '+ R$' : '- R$';
+            const valClass = isPositive ? 'value-positive' : 'value-negative';
+
+            newItem.innerHTML = `
+                <div class="transaction-info">
+                    <div class="transaction-icon"><i class="fa-brands fa-pix"></i></div>
+                    <div class="transaction-details">
+                
