@@ -2,18 +2,19 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interface Nubank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nubank Interface</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #222;
+            background-color: #121212;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,32 +25,38 @@
             display: none !important;
         }
 
+        /* Contêiner adaptável: no celular ocupa 100%, no computador simula o smartphone */
         .app-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             background-color: #f5f5f7;
             height: 100vh;
-            max-height: 840px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             position: relative;
-            border-radius: 20px;
             overflow: hidden;
         }
 
-        /* Header */
+        @media (min-width: 480px) {
+            .app-container {
+                height: 840px;
+                border-radius: 28px;
+                box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+            }
+        }
+
+        /* Header Nubank */
         .header {
             background-color: #820AD1;
             color: white;
-            padding: 24px 20px 20px 20px;
+            padding: 40px 20px 20px 20px;
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .user-profile {
@@ -73,8 +80,8 @@
             border: none;
             color: white;
             cursor: pointer;
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -86,7 +93,7 @@
         }
 
         .user-greeting {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 600;
         }
 
@@ -94,27 +101,26 @@
             outline: none;
             border-radius: 4px;
             padding: 2px 4px;
-            display: inline-block;
         }
 
         .editable-field:focus {
             background-color: rgba(255,255,255,0.25);
         }
 
-        /* Content */
+        /* Conteúdo Principal com Scroll */
         .content {
             padding: 16px 20px;
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 80px;
+            padding-bottom: 90px;
         }
 
         .card {
             background-color: #ffffff;
             border-radius: 16px;
-            padding: 18px;
+            padding: 20px;
             margin-bottom: 16px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
         }
 
         .card-header {
@@ -123,62 +129,66 @@
             align-items: center;
             color: #111;
             font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 10px;
+            font-size: 1.05rem;
+            margin-bottom: 12px;
         }
 
         .balance-amount {
-            font-size: 1.4rem;
+            font-size: 1.45rem;
             font-weight: 700;
             color: #111;
         }
 
         .balance-hidden {
-            width: 120px;
-            height: 24px;
+            width: 130px;
+            height: 26px;
             background-color: #e2e2e8;
             border-radius: 4px;
         }
 
-        /* Quick Actions */
+        /* Botões Rápidos (Carrossel) */
         .quick-actions {
             display: flex;
             gap: 12px;
             overflow-x: auto;
-            padding-bottom: 8px;
+            padding-bottom: 12px;
             margin-bottom: 16px;
+            scrollbar-width: none;
+        }
+
+        .quick-actions::-webkit-scrollbar {
+            display: none;
         }
 
         .action-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 70px;
+            min-width: 72px;
             cursor: pointer;
             border: none;
             background: none;
         }
 
         .action-icon {
-            width: 60px;
-            height: 60px;
+            width: 64px;
+            height: 64px;
             background-color: #efeff4;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 6px;
-            font-weight: bold;
-            color: #820AD1;
+            margin-bottom: 8px;
+            color: #111;
         }
 
         .action-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: #111;
         }
 
-        /* Cartão Virtual */
+        /* Botão Cartão Virtual */
         .my-cards {
             background-color: #efeff4;
             border-radius: 12px;
@@ -195,25 +205,26 @@
             width: 100%;
         }
 
-        /* Extrato */
+        /* Extrato Formatado */
         .section-title {
             font-size: 0.95rem;
             font-weight: 700;
             color: #111;
-            margin: 16px 0 10px 0;
+            margin: 20px 0 12px 0;
         }
 
         .transaction-list {
             background-color: white;
             border-radius: 16px;
             padding: 8px 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
         }
 
         .transaction-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: 14px 0;
             border-bottom: 1px solid #f0f0f5;
         }
 
@@ -221,8 +232,24 @@
             border-bottom: none;
         }
 
+        .transaction-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transaction-icon-box {
+            width: 40px;
+            height: 40px;
+            background-color: #f5f5f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .transaction-details p {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: #111;
         }
@@ -233,12 +260,41 @@
         }
 
         .transaction-value {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 700;
         }
 
         .value-positive { color: #00875a; }
         .value-negative { color: #111; }
+
+        /* Barra de Navegação Inferior */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #e2e2e8;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            cursor: pointer;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+        }
+
+        .nav-item.active {
+            color: #820AD1;
+            background-color: #f0e6ff;
+        }
 
         /* Modais */
         .modal-overlay {
@@ -253,16 +309,16 @@
 
         .modal-card {
             background-color: white;
-            width: 85%;
-            border-radius: 16px;
-            padding: 20px;
+            width: 88%;
+            border-radius: 20px;
+            padding: 22px;
             position: relative;
         }
 
         .modal-close {
             position: absolute;
-            top: 12px;
-            right: 12px;
+            top: 14px;
+            right: 14px;
             background: none;
             border: none;
             font-size: 1.2rem;
@@ -272,16 +328,16 @@
 
         .virtual-card-box {
             background: linear-gradient(135deg, #820AD1 0%, #4D067A 100%);
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 14px;
+            padding: 18px;
             color: white;
-            margin: 12px 0;
+            margin: 14px 0;
         }
 
         .vc-number {
-            font-size: 1rem;
+            font-size: 1.05rem;
             letter-spacing: 2px;
-            margin: 16px 0;
+            margin: 18px 0;
             font-family: monospace;
         }
 
@@ -305,10 +361,10 @@
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
         }
 
         .btn-submit {
@@ -316,8 +372,8 @@
             background-color: #820AD1;
             color: white;
             border: none;
-            padding: 10px;
-            border-radius: 20px;
+            padding: 12px;
+            border-radius: 25px;
             font-weight: 600;
             cursor: pointer;
             margin-top: 8px;
@@ -331,10 +387,12 @@
         <header class="header">
             <div class="header-top">
                 <div class="user-profile">
-                    👤
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
                 <div class="header-icons">
-                    <button class="icon-btn" id="toggle-eye" title="Ocultar/Mostrar Saldo">👁️</button>
+                    <button class="icon-btn" id="toggle-eye">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
                 </div>
             </div>
             <div class="user-greeting">
@@ -342,13 +400,13 @@
             </div>
         </header>
 
-        <!-- Main Content -->
+        <!-- Conteúdo Principal -->
         <main class="content">
             <!-- Saldo -->
             <div class="card">
                 <div class="card-header">
                     <span>Conta</span>
-                    <span>></span>
+                    <span style="color:#888;">›</span>
                 </div>
                 <div class="balance-amount" id="balance-value">
                     R$ <span contenteditable="true" class="editable-field" id="raw-balance">1.250,40</span>
@@ -359,33 +417,39 @@
             <!-- Botões Rápido -->
             <div class="quick-actions">
                 <button class="action-item" id="btn-pix">
-                    <div class="action-icon">❖</div>
+                    <div class="action-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#820AD1" stroke-width="2"><path d="M12 2L2 12l10 10 10-10L12 2z"></path></svg>
+                    </div>
                     <span class="action-label">Pix</span>
                 </button>
                 <button class="action-item">
-                    <div class="action-icon">║▌</div>
+                    <div class="action-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="7" y2="16"></line><line x1="11" y1="8" x2="11" y2="16"></line><line x1="15" y1="8" x2="17" y2="8"></line></svg>
+                    </div>
                     <span class="action-label">Pagar</span>
                 </button>
                 <button class="action-item">
-                    <div class="action-icon">⇄</div>
+                    <div class="action-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><line x1="17" y1="1" x2="17" y2="11"></line><path d="M12 6l5-5 5 5"></path><line x1="7" y1="23" x2="7" y2="13"></line><path d="M2 18l5 5 5-5"></path></svg>
+                    </div>
                     <span class="action-label">Transferir</span>
                 </button>
             </div>
 
             <!-- Botão Cartão Virtual -->
             <button class="my-cards" id="btn-card">
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <span style="color:#820AD1;">💳</span>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#820AD1" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
                     <span>Cartão Virtual</span>
                 </div>
-                <span>></span>
+                <span style="color:#888;">›</span>
             </button>
 
             <!-- Fatura Cartão -->
             <div class="card">
                 <div class="card-header">
                     <span>Cartão de crédito</span>
-                    <span>></span>
+                    <span style="color:#888;">›</span>
                 </div>
                 <p style="font-size: 0.8rem; color: #666; margin-bottom: 4px;">Fatura atual</p>
                 <div class="balance-amount" style="color: #00875a;">
@@ -393,30 +457,48 @@
                 </div>
             </div>
 
-            <!-- Extrato -->
+            <!-- Extrato de Transações -->
             <h3 class="section-title">Histórico de Transações</h3>
             <div class="transaction-list" id="transaction-list">
                 <div class="transaction-item">
-                    <div class="transaction-details">
-                        <p contenteditable="true" class="editable-field">Supermercado Modelo</p>
-                        <span>Hoje • Débito</span>
+                    <div class="transaction-left">
+                        <div class="transaction-icon-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#820AD1" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        </div>
+                        <div class="transaction-details">
+                            <p contenteditable="true" class="editable-field">Supermercado Modelo</p>
+                            <span>Hoje • Débito</span>
+                        </div>
                     </div>
                     <span class="transaction-value value-negative">- R$ 145,90</span>
                 </div>
             </div>
         </main>
 
+        <!-- Navegação Inferior -->
+        <nav class="bottom-nav">
+            <div class="nav-item active">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline></svg>
+            </div>
+            <div class="nav-item">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <div class="nav-item">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            </div>
+        </nav>
+
         <!-- MODAL CARTÃO VIRTUAL -->
         <div class="modal-overlay hidden" id="card-modal">
             <div class="modal-card">
                 <button class="modal-close" id="btn-close-card">✕</button>
-                <h3 style="font-size: 1rem; color: #111;">Cartão Virtual</h3>
-                <p style="font-size: 0.7rem; color: #666;">Clique para editar os valores:</p>
+                <h3 style="font-size: 1.05rem; color: #111;">Cartão Virtual</h3>
+                <p style="font-size: 0.75rem; color: #666; margin-top: 2px;">Clique para editar qualquer dado:</p>
 
                 <div class="virtual-card-box">
-                    <div style="display: flex; justify-content: space-between;">
-                        <span>⚡ Virtual</span>
-                        <span style="font-weight: bold;">Mastercard</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.8rem;">⚡ Virtual</span>
+                        <span style="font-weight: bold; font-style: italic; font-size: 0.9rem;">mastercard</span>
                     </div>
                     <div class="vc-number">
                         <span contenteditable="true" class="editable-field">5502 8412 9031 4481</span>
@@ -427,7 +509,7 @@
                             <div contenteditable="true" class="editable-field" id="card-holder-name">USUÁRIO</div>
                         </div>
                         <div>
-                            <div style="opacity: 0.7; font-size: 0.6rem;">VAL.</div>
+                            <div style="opacity: 0.7; font-size: 0.6rem;">VALIDADE</div>
                             <div contenteditable="true" class="editable-field">08/29</div>
                         </div>
                         <div>
@@ -436,7 +518,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn-submit" id="btn-done-card">Fechar</button>
+                <button class="btn-submit" id="btn-done-card">Concluído</button>
             </div>
         </div>
 
@@ -444,7 +526,7 @@
         <div class="modal-overlay hidden" id="pix-modal">
             <div class="modal-card">
                 <button class="modal-close" id="btn-close-pix">✕</button>
-                <h3 style="font-size: 1rem; color: #111; margin-bottom: 10px;">Fazer / Receber Pix</h3>
+                <h3 style="font-size: 1.05rem; color: #111; margin-bottom: 12px;">Fazer / Receber Pix</h3>
                 
                 <div class="form-group">
                     <label for="pix-type">Operação</label>
@@ -468,7 +550,6 @@
     </div>
 
     <script>
-        // Executa o script apenas após o carregamento da tela
         window.onload = function() {
             var toggleEye = document.getElementById('toggle-eye');
             var balanceValue = document.getElementById('balance-value');
@@ -484,72 +565,11 @@
             var btnCloseCard = document.getElementById('btn-close-card');
             var btnDoneCard = document.getElementById('btn-done-card');
 
-            // Toggle Saldo
+            // Saldo Toggle
             toggleEye.onclick = function() {
                 if (balanceValue.classList.contains('hidden')) {
                     balanceValue.classList.remove('hidden');
                     balanceHidden.classList.add('hidden');
                 } else {
                     balanceValue.classList.add('hidden');
-                    balanceHidden.classList.remove('hidden');
-                }
-            };
-
-            // Modal Cartão
-            btnCard.onclick = function() {
-                var name = document.getElementById('user-name').innerText;
-                document.getElementById('card-holder-name').innerText = name.toUpperCase();
-                cardModal.classList.remove('hidden');
-            };
-            btnCloseCard.onclick = function() { cardModal.classList.add('hidden'); };
-            btnDoneCard.onclick = function() { cardModal.classList.add('hidden'); };
-
-            // Modal Pix
-            btnPix.onclick = function() { pixModal.classList.remove('hidden'); };
-            btnClosePix.onclick = function() { pixModal.classList.add('hidden'); };
-
-            // Executar Pix
-            btnConfirmPix.onclick = function() {
-                var type = document.getElementById('pix-type').value;
-                var name = document.getElementById('pix-name').value || 'Pix';
-                var amount = parseFloat(document.getElementById('pix-amount').value);
-
-                if (isNaN(amount) || amount <= 0) {
-                    alert('Digite um valor válido!');
-                    return;
-                }
-
-                var rawBalanceElem = document.getElementById('raw-balance');
-                var currentVal = parseFloat(rawBalanceElem.innerText.replace('.', '').replace(',', '.'));
-                if (isNaN(currentVal)) currentVal = 0;
-
-                var isReceive = (type === 'receive');
-                var newVal = isReceive ? (currentVal + amount) : (currentVal - amount);
-                
-                rawBalanceElem.innerText = newVal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-
-                // Extrato
-                var transactionList = document.getElementById('transaction-list');
-                var newItem = document.createElement('div');
-                newItem.className = 'transaction-item';
-                var sign = isReceive ? '+ R$' : '- R$';
-                var valClass = isReceive ? 'value-positive' : 'value-negative';
-
-                newItem.innerHTML = `
-                    <div class="transaction-details">
-                        <p contenteditable="true" class="editable-field">${isReceive ? 'Pix recebido - ' : 'Pix enviado - '}${name}</p>
-                        <span>Agora • Pix</span>
-                    </div>
-                    <span class="transaction-value ${valClass}">${sign} ${amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-                `;
-
-                transactionList.insertBefore(newItem, transactionList.firstChild);
-
-                document.getElementById('pix-name').value = '';
-                document.getElementById('pix-amount').value = '';
-                pixModal.classList.add('hidden');
-            };
-        };
-    </script>
-</body>
-</html>
+    
